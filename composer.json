@@ -1,0 +1,27 @@
+{
+    "name": "hackathon/hrqls",
+    "description": "HRQLS project for Fall 2015 Hackathon",
+    "keywords": ["tol", "hackathon"],
+    "authors": [
+        {
+            "name": "Jason Bennett",
+            "email": "jason.bennett@dominionenterprises.com",
+            "role": "Developer"
+        }
+    ],
+    "license": "proprietary",
+    "require": {
+        "php": "~5.4",
+        "ext-json": "~1.2",
+        "guzzle/guzzle": "~3.9",
+        "silex/silex": "~1.3"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "~4.2"
+    },
+    "autoload": {
+        "psr-4": {
+            "HRQLS\\": "src/HRQLS/"
+        }
+    }
+}
