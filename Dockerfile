@@ -28,9 +28,14 @@ RUN \
   mv ./elasticsearch-1.7.1 /usr/local/share/elasticsearch && \
   /usr/local/share/elasticsearch/bin/plugin -install mobz/elasticsearch-head
 
+RUN \
+  apt-get install -y php5-curl
+
+ADD DockerConfig/000-default.conf /etc/apache2/site-available/
+
 ###################
 # Work Directory
-WORKDIR /src
+WORKDIR /var/www/html
 
 ###################
 # Container Command

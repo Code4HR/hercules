@@ -1,0 +1,10 @@
+{
+  "siteName": "Hercules Project: HRQLS",
+  "routes": {
+    "get": [
+      {
+        "url": "/",
+        "controller": "HRQLS\\Controllers\\Main::main" }
+    ]
+  }
+}
