@@ -33,7 +33,6 @@ html, body {
     outline: none;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
 }
-
 #pac-input {
     background-color: #fff;
     font-family: Roboto;
@@ -44,21 +43,17 @@ html, body {
     text-overflow: ellipsis;
     width: 300px;
 }
-
 #pac-input:focus {
     border-color: #4d90fe;
 }
-
 .pac-container {
     font-family: Roboto;
 }
-
 #type-selector {
     color: #fff;
     background-color: #4d90fe;
     padding: 5px 11px 0px 11px;
 }
-
 #type-selector label {
     font-family: Roboto;
     font-size: 13px;
@@ -75,6 +70,15 @@ html, body {
     float: left;
     box-shadow: 10px 0px 0px 0px #888888;
 }
+.sideRail h1 span {
+    color: white;
+    font-family: "Georgia", sans-serif;
+    font-style: italic;
+    padding-left: 5%;
+}
+#secondLine {
+    padding-left: 30%;
+}
 .railTable {
     top: 50px;
     position: relative;
@@ -82,13 +86,13 @@ html, body {
     margin: 0 auto;
     width: 100%
 }
-#slider {
+.slider {
     width: 91%;
     height: 17px;
     position: relative;
     margin: 10px auto;
 }
-#slider .bar {
+.slider .bar {
     width: 90%;
     height: 15px;
     background: #333;
@@ -109,7 +113,6 @@ input[type="range"] {
     background-color: black;
     height: 2px;
 }
-
 input[type="range"]::-webkit-slider-thumb {
     -webkit-appearance: none;
     position: relative;
@@ -120,45 +123,47 @@ input[type="range"]::-webkit-slider-thumb {
     cursor: pointer;
     background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ebf1f6), color-stop(50%,#abd3ee), color-stop(51%,#89c3eb), color-stop(100%,#d5ebfb));
 }
-
-input[type="range"]:hover ~ #rangevalue,input[type="range"]:active ~ #rangevalue {
+input[type="range"]:hover ~ #crimeRangeValue, input[type="range"]:hover ~ #colRangeValue, input[type="range"]:hover ~ #foodRangeValue{
     -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=100)";
     filter: alpha(opacity=100);
     opacity: 1;
     top: -75px;
 }
+input[type="range"]:active ~ #crimeRangeValue, input[type="range"]:active ~ #colRangeValue, input[type="range"]:active ~ #foodRangeValue {
+    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=100)";
+    filter: alpha(opacity=100);
+    opacity: 1;
+    top: -75px;
+}
+#crimeRangeValue, #colRangeValue, #foodRangeValue {
+	color: white;
+	font-size: 10px;
+	text-align: center;
+	font-family:  Arial, sans-serif;
+	display: block;
+	color: #fff;
+	margin: 20px 0;
+	position: relative;
+	left: 44.5%;
+	padding: 6px 12px;
+	border: 1px solid black;
 
-/* Tool Tip */
-#rangevalue {
-    color: white;
-    font-size: 10px;
-    text-align: center;
-    font-family:  Arial, sans-serif;
-    display: block;
-    color: #fff;
-    margin: 20px 0;
-    position: relative;
-    left: 45%;
-    padding: 6px 12px;
-    border: 1px solid black;
+	-webkit-box-shadow: inset 0px 1px 1px 0px rgba(255, 255, 255, 0.2), 0px 2px 4px 0px rgba(0,0,0,0.4);
+	-moz-box-shadow: inset 0px 1px 1px 0px rgba(255, 255, 255, 0.2), 0px 2px 4px 0px rgba(0,0,0,0.4);
+	box-shadow: inset 0px 1px 1px 0px rgba(255, 255, 255, 0.2), 0px 2px 4px 0px rgba(0,0,0,0.4);
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#222931), color-stop(100%,#181D21));
 
-    -webkit-box-shadow: inset 0px 1px 1px 0px rgba(255, 255, 255, 0.2), 0px 2px 4px 0px rgba(0,0,0,0.4);
-    -moz-box-shadow: inset 0px 1px 1px 0px rgba(255, 255, 255, 0.2), 0px 2px 4px 0px rgba(0,0,0,0.4);
-    box-shadow: inset 0px 1px 1px 0px rgba(255, 255, 255, 0.2), 0px 2px 4px 0px rgba(0,0,0,0.4);
-    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#222931), color-stop(100%,#181D21));
+	-webkit-border-radius: 20px;
+	-moz-border-radius: 20px;
+	border-radius: 20px;
+	width: 18px;
+	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+	filter: alpha(opacity=0);
+	opacity: 0;
 
-    -webkit-border-radius: 20px;
-    -moz-border-radius: 20px;
-    border-radius: 20px;
-    width: 18px;
-    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
-    filter: alpha(opacity=0);
-    opacity: 0;
-
-    -webkit-transition: all 0.5s ease;
-    -moz-transition: all 0.5s ease;
-    -o-transition: all 0.5s ease;
-    -ms-transition: all 0.5s ease;
+	-webkit-transition: all 0.5s ease;
+	-moz-transition: all 0.5s ease;
+	-o-transition: all 0.5s ease;
     transition: all 0.5s ease;
     top: -95px;
 }
