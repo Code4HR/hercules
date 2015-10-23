@@ -1,0 +1,53 @@
+{
+    "settings" :{
+        "index" : {
+           "number_of_shards" : 3,
+           "number_of_replicas" : 1
+        }
+    },
+    "mappings" : {
+        "crimedata" : {
+            "properties" : {
+                "title" : {"type" : "string"},
+                "date_occured" : {"type" : "date"},
+                "location" : {"type" : "geo_point"},
+                "link" : {"type" : "string"},
+                "severity" : {"type" : "integer"},
+                "city" : {"type" : "string"}
+            }
+        },
+        "housedata" : {
+            "properties" : {
+                "neghborhood" : {"type" : "string"},
+                "location" : {"type" : "geo_point"},
+                "housing_prices" : {
+                    "type" : "nested",
+                    "properties" : {
+                        "single_family_house" : {"type" : "float"},
+                        "condo" : {"type" : "float"},
+                        "2beds" : {"type" : "float"},
+                        "3beds" : {"type" : "float"},
+                        "4beds" : {"type" : "float"},
+                        "sqFoot" : {"type" : "float"}
+                    }
+                },
+                "tax" : {
+                    "type" : "nested",
+                    "properties" : {
+                        "neighborhood" : {"type" : "float"},
+                        "city" : {"type" : "float"},
+                        "nation" : {"type" : "float"}
+                    }
+                },
+                "turnover" : {
+                    "type" : "nested",
+                    "properties" : {
+                        "neighborhood" : {"type" : "float"},
+                        "city" : {"type" : "float"},
+                        "nation" : {"type" : "float"}
+                    }
+                }
+            }
+        }
+    }
+}
