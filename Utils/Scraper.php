@@ -14,10 +14,10 @@
  $VaBeachScraper = new Scraper('http://hamptonroads.com/newsdata/crime/virginia-beach/search/rss?me=/virginia-beach/search&type=&near=&radius=&op=Submit&form_token=9dc84572393ad9c68f54cad6549692f3&form_id=crime_searchform', './data/VABeach_Crime.json');
 
  //$ChesapeakeScraper->scrape();
- $NpnScraper->scrape();
- $NorfolkScraper->scrape();
- $PortsmouthScraper->scrape();
- $SuffolkScraper->scrape();
+ //$NpnScraper->scrape();
+ //$NorfolkScraper->scrape();
+ //$PortsmouthScraper->scrape();
+ //$SuffolkScraper->scrape();
  $VaBeachScraper->scrape();
 
  class Scraper
@@ -81,4 +81,3 @@
      }
 
  }
-
