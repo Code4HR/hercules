@@ -7,9 +7,14 @@
             "name": "Jason Bennett",
             "email": "jason.bennett@dominionenterprises.com",
             "role": "Developer"
+        },
+        {
+            "name": "Derek Drummond",
+            "email": "derek.drummond@dominionenterprises.com",
+            "role": "Developer"
         }
     ],
-    "license": "proprietary",
+    "license": "MIT",
     "require": {
         "php": "~5.4",
         "ext-json": "~1.2",
@@ -17,7 +22,8 @@
         "silex/silex": "~1.3"
     },
     "require-dev": {
-        "phpunit/phpunit": "~4.2"
+        "phpunit/phpunit": "~4.2",
+        "elasticsearch/elasticsearch": "~1.0"
     },
     "autoload": {
         "psr-4": {
