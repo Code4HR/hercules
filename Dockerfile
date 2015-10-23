@@ -29,9 +29,10 @@ RUN \
   /usr/local/share/elasticsearch/bin/plugin -install mobz/elasticsearch-head
 
 RUN \
-  apt-get install -y php5-curl
+  apt-get install -y php5-curl && \
+  rm /etc/apache2/sites-available/000-default.conf
 
-ADD DockerConfig/000-default.conf /etc/apache2/site-available/
+ADD DockerConfig/sites-available/000-default.conf /etc/apache2/sites-available/
 
 ###################
 # Work Directory

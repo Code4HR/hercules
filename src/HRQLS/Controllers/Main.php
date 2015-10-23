@@ -9,7 +9,7 @@ class Main
 {
     public function main(Request $req, Application $app)
     {
-        return $app['twig']->render('homepage.twig', array(
+        return $app['twig']->render('mainPage.twig', array(
             'title' => 'Hercules'
         ));
     } 
