@@ -9,7 +9,6 @@ namespace HRQLS;
 use Silex\Application;
 use Silex\Provider\TwigServiceProvider;
 use Monolog\Logger;
-use Dakatsuka\MonologFluentHandler\FluentHandler;
 use JsonSchema\Uri\UriRetriever as UriRetriever;
 
 /**
@@ -74,7 +73,6 @@ class Bootstrap
     public function __construct(Application $app)
     {
         $this->app = $app;
-        $this->setupLogger();
     }
 
     /**
@@ -108,7 +106,7 @@ class Bootstrap
 
         $this->config = [];
 
-        $this->config = json_decode( file_get_contents( __DIR__ . '/config/main.json' ) );
+        $this->config = json_decode( file_get_contents( __DIR__ . '/config/routes.json' ) );
     }
 
     /**
@@ -124,23 +122,6 @@ class Bootstrap
                 'twig.path' => __DIR__ . '/Views'
             )
         );
-    }
-
-    /**
-     * Sets up the application logger.
-     *
-     * TODO: Need magic literals pulled into config if possible.
-     *
-     * @return void
-     */
-    public function setupLogger()
-    {
-        $logger = new Logger(self::APPLOGNAME);
-        $logger->pushHandler(new FluentHandler(null, '127.0.0.1', 24224));
-
-        $logprovider = new LogProvider($logger);
-        $this->app['mainlogger'] = $logprovider->getLogger();
-        $this->logger = $logprovider->getLogger();
     }
 
     /**
