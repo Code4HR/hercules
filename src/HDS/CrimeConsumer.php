@@ -14,48 +14,38 @@
 *]
 */
 
-public final class CrimeConsumer{
+class CrimeConsumer{
 
-    $scraper;
+    public $scraper;
+    public $city;
 
-    public function __construct($sourceURL);
+    public function __construct($city, $url);
+    {
+        $this->scraper = new Scraper($url);
+        $this->city = $city;
+    }
+
+    public function consume()
+    {
+        header('Content-Type: application/json');
+        $json = array();
+
+        $currPage = 0;
+        $prevPage = 0;
+        //do {
+           $json = $this->scraper->scrapeCrime($currPage);
+           $this->insertToElasticSearch($json);
+           $prevPage = $currPage;
+           $currPage++;
+        //}
+        //while (count($json[$prevPage])%35 === 0);
+
+
+        //$jsonToInsert = $this->scraper->scrape();
+    }
+
+    private function insertIntoElasticSearch($json)
     {
 
     }
-}
-
-
-"Neighborhood":
-{
-    "ID": AUTO ASSIGN,
-    "Neghborhood": "GreenBrier Heights",
-    "latitude": (float),
-    "longitude" : (float),
-    "Housing Prices":
-    [
-        "Single Family House": (double),
-        "Condo": (double),
-        "2 bed": (double),
-        "3 bed": (double),
-        "4 bed": (double),
-        "sqFoot": (double),
-    ],
-    "Tax":
-    [
-        "neighborhood" (double),
-        "city":(double),
-        "nation":(double),
-    ],
-    "turnover":
-    [
-        "neighborhood" (double),
-        "city":(double),
-        "nation":(double),
-    ]
-}
-
-
-
-
-
 }
