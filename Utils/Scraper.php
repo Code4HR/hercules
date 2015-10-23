@@ -55,7 +55,7 @@
              $json['location']['lat'] = $location->getElementsByTagName('lat')->item(0)->firstChild->nodeValue;
              $json['location']['lon'] = $location->getElementsByTagName('lon')->item(0)->firstChild->nodeValue;
              $json['link'] = $item->getElementsByTagName('link')->item(0)->firstChild->nodeValue;
-             $json['date_occured'] = new \DateTime($item->getElementsByTagName('pubdate')->item(0)->firstChild->nodeValue);
+             $json['date_occured'] = (new \DateTime($item->getElementsByTagName('pubdate')->item(0)->firstChild->nodeValue))->format('Y-m-d');
              $json['severity'] = '5';
              $json['city'] = $city;
              array_push($jsonArray, $json);
