@@ -4,7 +4,11 @@
     "get": [
       {
         "url": "/",
-        "controller": "HRQLS\\Controllers\\Main::main" }
+        "controller": "HRQLS\\Controllers\\Main::main"
+      },
+      {
+        "url": "/crime",
+        "controller": "HRQLS\\Controllers\\Crime::main" }
     ]
   }
 }
