@@ -2,3 +2,4 @@ vendor/
 logs/
 
 *.swp
+*.phar
