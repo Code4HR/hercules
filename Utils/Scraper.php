@@ -6,7 +6,7 @@
 
  namespace Utils;
 
- public class Scraper
+ class Scraper
  {
      const PER_PAGE = 35;
 
@@ -40,7 +40,7 @@
          file_put_contents($this->destination, json_encode($json));
      }
 
-     public function scrapeCrime($page = 0)
+     public function scrapeCrime($page = 0, $city)
      {
          $url = $this->source . '&page=' . $page;
          $feed = new \DOMDocument();
@@ -51,12 +51,13 @@
          foreach($items as $item) {
              $json = array();
              $json['title'] = $item->getElementsByTagName('title')->item(0)->firstChild->nodeValue;
-             $json['description'] = $item->getElementsByTagName('description')->item(0)->firstChild->nodeValue;
-             $json['link'] = $item->getElementsByTagName('link')->item(0)->firstChild->nodeValue;
-             $json['pubdate'] = $item->getElementsByTagName('pubdate')->item(0)->firstChild->nodeValue;
              $location = $item->getElementsByTagName('loc')->item(0);
-             $json['longitude'] = $location->getElementsByTagName('lon')->item(0)->firstChild->nodeValue;
-             $json['latitude'] = $location->getElementsByTagName('lat')->item(0)->firstChild->nodeValue;
+             $json['location']['lat'] = $location->getElementsByTagName('lat')->item(0)->firstChild->nodeValue;
+             $json['location']['lon'] = $location->getElementsByTagName('lon')->item(0)->firstChild->nodeValue;
+             $json['link'] = $item->getElementsByTagName('link')->item(0)->firstChild->nodeValue;
+             $json['date_occured'] = new \DateTime($item->getElementsByTagName('pubdate')->item(0)->firstChild->nodeValue);
+             $json['severity'] = '5';
+             $json['city'] = $city;
              array_push($jsonArray, $json);
          }
 
