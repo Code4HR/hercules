@@ -50,11 +50,13 @@
         "twig/twig": "^1.22"
     },
     "require-dev": {
-        "phpunit/phpunit": "~4.2"        
+        "phpunit/phpunit": "~4.2"
     },
     "autoload": {
         "psr-4": {
-            "HRQLS\\": "src/HRQLS/"
+            "HRQLS\\": "src/HRQLS/",
+            "HDS\\": "src/HDS/",
+            "Utils\\": "Utils/"
         }
     }
 }
