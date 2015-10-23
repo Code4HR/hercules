@@ -1,7 +1,23 @@
+<!DOCTYPE html>
 <html>
-<head>
-</head>
-<body>
-  This is a basic page
-</body>
+  <head>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta charset="utf-8">
+    <link href="/css/main.css" rel="stylesheet" type="text/css" />
+    <title>Places Searchbox</title>
+  </head>
+  <body>
+      <div class="sideRail">
+          <div id="slider">
+	<input class="bar" type="range" id="rangeinput" value="50" onchange="rangevalue.value=value"/>
+	<span class="highlight"></span>
+	<output id="rangevalue">50</output>
+</div>
+      </div>
+    <input id="pac-input" class="controls" type="text" placeholder="Search Box">
+    <div id="map"></div>
+      <script src="/javascript/index.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDglONa03SLsLkWrBbCL0WFYOeAhNKrpJI&libraries=places&callback=initAutocomplete"
+         async defer></script>
+  </body>
 </html>
