@@ -33,6 +33,11 @@ html, body {
     outline: none;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
 }
+.leftLabel, .centerLabel, .rightLabel{
+    width: 32%;
+    display: inline-block;
+    color: white;
+}
 #pac-input {
     background-color: #fff;
     font-family: Roboto;
