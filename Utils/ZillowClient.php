@@ -126,12 +126,12 @@ namespace Utils;
        @$json['location']['lat'] = $response['region']['latitude'];
 
        if (!isset($response['pages'])) {
-           return $json;
+           return json_encode($json);
        }
        $pages = $response['pages'];
 
        if (!isset($pages['page'][0]['tables']['table']['data']['attribute'])) {
-           return $json;
+           return json_encode($json);
        }
        $attributes = $pages['page'][0]['tables']['table']['data']['attribute'];
 
