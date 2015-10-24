@@ -26,9 +26,9 @@
                     </td></tr>
                 <tr><td class="white slider-title">Health Inspections</td></tr>
                 <tr><td>
-                    <div class="slider" id="healthSlider" name="health">
-                        <input class="bar" type="range" id="rangeinput" value="50" onchange="healthRangeValue.value=value"/>
-                        <output id="healthRangeValue">50</output>
+                    <div class="slider" id="foodSanitationSlider" name="food/sanitation">
+                        <input class="bar" type="range" id="rangeinput" value="50" onchange="foodSanitationRangeValue.value=value"/>
+                        <output id="foodSanitationRangeValue">50</output>
                     </div>
                     </td></tr>
 
@@ -36,11 +36,11 @@
 
 
         </div>
-        <input id="pac-input" class="controls" type="text" placeholder="Search Box">
+<!--        <input id="pac-input" class="controls" type="text" placeholder="Search Box">-->
         <div id="map"></div>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
         <script src="/javascript/index.js"></script>
-        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDglONa03SLsLkWrBbCL0WFYOeAhNKrpJI&libraries=places&callback=initAutocomplete"
+        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDglONa03SLsLkWrBbCL0WFYOeAhNKrpJI&libraries=visualization&callback=initAutocomplete&sensor=true_or_false"
                 async defer></script>
     </body>
 </html>

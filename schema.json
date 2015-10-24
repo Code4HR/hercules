@@ -18,34 +18,14 @@
         },
         "housedata" : {
             "properties" : {
-                "neghborhood" : {"type" : "string"},
+                "state" : {"type" : "string"},
+                "city": {"type": "string"},
+                "zip": {"type": "string"},
                 "location" : {"type" : "geo_point"},
-                "housing_prices" : {
-                    "type" : "nested",
-                    "properties" : {
-                        "single_family_house" : {"type" : "float"},
-                        "condo" : {"type" : "float"},
-                        "2beds" : {"type" : "float"},
-                        "3beds" : {"type" : "float"},
-                        "4beds" : {"type" : "float"},
-                        "sqFoot" : {"type" : "float"}
-                    }
-                },
-                "tax" : {
-                    "type" : "nested",
-                    "properties" : {
-                        "neighborhood" : {"type" : "float"},
-                        "city" : {"type" : "float"},
-                        "nation" : {"type" : "float"}
-                    }
-                },
-                "turnover" : {
-                    "type" : "nested",
-                    "properties" : {
-                        "neighborhood" : {"type" : "float"},
-                        "city" : {"type" : "float"},
-                        "nation" : {"type" : "float"}
-                    }
+                "turnoverWithinLastyear" : {"type": "float" },
+                "avgHomeValueIndex": {"type": "integer"},
+                "avgHomesRecentlySold": {"type": "integer"},
+                "avgPropertyTax": {"type": "integer"}
                 }
             }
         }
