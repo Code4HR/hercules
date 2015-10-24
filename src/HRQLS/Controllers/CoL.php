@@ -67,7 +67,7 @@ class CoL
         $averageTurn = $averageTurnover['total'] / $averageTurnover['number'];
         $slidervalue = $req->get('slidervalue');
         foreach ($results as $zip) {
-          $sliderInfo = $this->calculate($slider);
+          $sliderInfo = $this->calculate($slidervalue);
           $weight = $this->determineWeight($sliderInfo, $zip['_source']['avgHomeValueIndex'], $averageHouse, $maxHouseValue, $minHouseValue);
           $responseObject[] = array(
               'lat' => $zip['_source']['location']['lat'],
@@ -85,7 +85,7 @@ class CoL
         $distance = 0;
         if ($slider >= 50) {
             $direction = true;
-            $distance = ((($slider - 50) * 1) + 50) / 50;
+            $distance = ((($slider - 50) * -1) + 50) / 50;
         } else {
             $distance = $slider / 50;
         }
