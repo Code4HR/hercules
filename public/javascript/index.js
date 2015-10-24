@@ -1,18 +1,7 @@
 function initAutocomplete() {
-    
-    var criminalData = [];
-    $('#crimeSlider,#colSlider,#foodSlider').change(function(){
-        var data = {};
-        data.sliderValue = $(this).text();
-        $.ajax({
-            method: 'GET',
-            url: '/crime',
-            data: data,
-            success: function(text) {
-                criminalData = text;
-            }
-        });
-    });
+
+    var heatMapData = [];
+
 
     var styleArray = [
         {
@@ -35,11 +24,40 @@ function initAutocomplete() {
             ]
         },
     ];
+
     var map = new google.maps.Map(document.getElementById('map'), {
         center: {lat: 36.9487874, lng: -76.2121092},
         zoom: 11,
         styles: styleArray,
         mapTypeId: google.maps.MapTypeId.ROADMAP
+    });
+    //console.log(heatMapData);
+    var heatmap = new google.maps.visualization.HeatmapLayer({
+        data: heatMapData
+    });
+    heatmap.setMap(map);
+
+    $('#crimeSlider,#colSlider,#foodSlider').change(function(){
+        heatMapData = [];
+        var data = {};
+        data.sliderValue = $(this).text();
+        $.ajax({
+            method: 'GET',
+            url: '/crime',
+            data: data,
+            dataType: 'json',
+            success: function(crimeData) {
+                for (var elem = 0, max = crimeData.length; elem < max; elem++) {
+                    heatMapData.push({location: new google.maps.LatLng(crimeData[elem].latitude, crimeData[elem].longitude), weight: crimeData[elem].severity});
+                }
+                heatmap = new google.maps.visualization.HeatmapLayer({
+                    data: heatMapData,
+                    maxIntensity: 12,
+                    dissipate: true
+                });
+                heatmap.setMap(map);
+            }
+        });
     });
 
     // Create the search box and link it to the UI element.
@@ -99,4 +117,5 @@ function initAutocomplete() {
         map.fitBounds(bounds);
     });
     // [END region_getplaces]
+
 }

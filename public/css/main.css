@@ -10,7 +10,7 @@ html, body {
     color: #000;
 }
 .slider-title {
-    font-family: Garamond, Baskerville, "Baskerville Old Face", "Hoefler Text", "Times New Roman", serif;
+    font-family: "Georgia", sans-serif;
     font-variant: small-caps;
     font-size: 1.75em;
     padding: 30px 0 0 0;
@@ -75,9 +75,10 @@ html, body {
     font-family: "Georgia", sans-serif;
     font-style: italic;
     padding-left: 5%;
+    width: 90%
 }
 #secondLine {
-    padding-left: 30%;
+    padding-left: 20%;
 }
 .railTable {
     top: 50px;
