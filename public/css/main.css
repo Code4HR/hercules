@@ -63,7 +63,7 @@ html, body {
     width: calc(25% - 10px);
     height: 100%;
     background-image: url("../imgs/norfolk.jpg");
-    background-size: contain;
+    background-size: cover;
     background-repeat: no-repeat;
     background-position: bottom;
     background-color: #19597A;
@@ -123,19 +123,19 @@ input[type="range"]::-webkit-slider-thumb {
     cursor: pointer;
     background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ebf1f6), color-stop(50%,#abd3ee), color-stop(51%,#89c3eb), color-stop(100%,#d5ebfb));
 }
-input[type="range"]:hover ~ #crimeRangeValue, input[type="range"]:hover ~ #colRangeValue, input[type="range"]:hover ~ #foodRangeValue{
+input[type="range"]:hover ~ #crimeRangeValue, input[type="range"]:hover ~ #colRangeValue, input[type="range"]:hover ~ #healthRangeValue{
     -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=100)";
     filter: alpha(opacity=100);
     opacity: 1;
     top: -75px;
 }
-input[type="range"]:active ~ #crimeRangeValue, input[type="range"]:active ~ #colRangeValue, input[type="range"]:active ~ #foodRangeValue {
+input[type="range"]:active ~ #crimeRangeValue, input[type="range"]:active ~ #colRangeValue, input[type="range"]:active ~ #healthRangeValue {
     -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=100)";
     filter: alpha(opacity=100);
     opacity: 1;
     top: -75px;
 }
-#crimeRangeValue, #colRangeValue, #foodRangeValue {
+#crimeRangeValue, #colRangeValue, #healthRangeValue {
 	color: white;
 	font-size: 10px;
 	text-align: center;

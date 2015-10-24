@@ -1,4 +1,18 @@
 function initAutocomplete() {
+    
+    var criminalData = [];
+    $('#crimeSlider,#colSlider,#foodSlider').change(function(){
+        var data = {};
+        data.sliderValue = $(this).text();
+        $.ajax({
+            method: 'GET',
+            url: '/crime',
+            data: data,
+            success: function(text) {
+                criminalData = text;
+            }
+        });
+    });
 
     var styleArray = [
         {
@@ -37,7 +51,7 @@ function initAutocomplete() {
     map.addListener('bounds_changed', function() {
         searchBox.setBounds(map.getBounds());
     });
-     
+
 
     var markers = [];
     // [START region_getplaces]
