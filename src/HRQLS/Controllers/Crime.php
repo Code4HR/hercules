@@ -18,6 +18,8 @@ class Crime
             'index'  => 'hrqls',
             'type'   => 'crimedata',
             'body' => [
+                'from' => 0,
+                'size' => 10000,
                 'query' => [
                     'range' => [
                         'severity' => [
@@ -27,7 +29,21 @@ class Crime
                 ]
             ] 
        );
-       $result = $client->search($params)['hits'];
-       return new Response(json_encode($result), 201);
+       $result = $client->search($params);
+       $node = [];
+       if ($result['hits']['total'] > 0) {
+            $node = $result['hits']['hits'];
+       }
+       
+       $crimedata = [];
+       foreach ($node as $field => $crimes) {
+           $data['title'] = $crimes['_source']['title'];
+           $data['latitude'] = $crimes['_source']['location']['lat'];
+           $data['longitude'] = $crimes['_source']['location']['lon'];
+           $data['severity'] = $crimes['_source']['severity'];
+           $crimedata[] = $data;
+       }
+
+       return new Response(json_encode($crimedata), 201);
     } 
 }
