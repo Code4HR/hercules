@@ -13,7 +13,9 @@ class Sanitation
         'portsmouth' => 'http://api.openhealthinspection.com/vendors?after=24-10-2014&city=portsmouth',
         'virginiabeach' => 'http://api.openhealthinspection.com/vendors?after=24-10-2014&city=virginia%20beach',
         'suffolk' => 'http://api.openhealthinspection.com/vendors?after=24-10-2014&city=suffolk',
-        'newportnews' => 'http://api.openhealthinspection.com/vendors?after=24-10-2014&city=newport%20news'
+        'newportnews' => 'http://api.openhealthinspection.com/vendors?after=24-10-2014&city=newport%20news',
+        'hampton' => 'http://api.openhealthinspection.com/vendors?after=24-10-2014&city=hampton',
+        'chesapeake' => 'http://api.openhealthinspection.com/vendors?after=24-10-2014&city=chesapeake'
     ];
 
     public function main(Request $req, Application $app)
