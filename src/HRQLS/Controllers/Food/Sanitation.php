@@ -30,6 +30,7 @@ class Sanitation
         $sanitationdata = [];
         foreach ([50, 75, 80, 90] as $value) {
             $updatedslidervalue = (($sliderPercentage * (100 - $value) ) / 100) + $value;
+            //echo $updatedslidervalue;exit;
             $sanitationdata = [];
             foreach($response as $key => $res) { 
                 foreach ($res as $toldata) {
@@ -38,7 +39,7 @@ class Sanitation
                     $data['longitude'] = $toldata['coordinates']['longitude'];
                     $data['city'] = $toldata['city'];
                     $score = $toldata['score'];
-                    if ($score >= $updatedslidervalue) {
+                    if ($score <= $updatedslidervalue) {
                         $sanitationdata[] = $data;
                     }
                 }
