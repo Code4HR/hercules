@@ -32,15 +32,21 @@ class Sanitation
             $updatedslidervalue = (($sliderPercentage * (100 - $value) ) / 100) + $value;
             //echo $updatedslidervalue;exit;
             $sanitationdata = [];
-            foreach($response as $key => $res) { 
+            foreach($response as $key => $res) {
+                $apidata = []; 
                 foreach ($res as $toldata) {
                     $data['name'] = $toldata['name'];
                     $data['latitude'] = $toldata['coordinates']['latitude'];
                     $data['longitude'] = $toldata['coordinates']['longitude'];
                     $data['city'] = $toldata['city'];
                     $score = $toldata['score'];
-                    if ($score <= $updatedslidervalue) {
+                    $apidata[] = $data['city'];
+                    if ($score >= $updatedslidervalue) {
                         $sanitationdata[] = $data;
+                    }
+                    
+                    if (count($apidata) > 50) {
+                        break;
                     }
                 }
             }
