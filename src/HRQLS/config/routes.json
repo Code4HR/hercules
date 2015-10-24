@@ -13,6 +13,10 @@
       {
         "url": "/col",
         "controller": "HRQLS\\Controllers\\CoL::main"
+      },
+      {
+        "url": "/food/sanitation",
+        "controller": "HRQLS\\Controllers\\Food\\Sanitation::main" 
       }
     ]
   }
