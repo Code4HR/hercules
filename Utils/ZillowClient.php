@@ -90,7 +90,7 @@ namespace Utils;
    public function getDataByZipCode($zip)
    {
        if (!in_array($zip, static::$zips)) {
-           return json_encode([]);
+           return [];
        }
 
        $url = self::BASE_URL . self::API_KEY . '&zip=' . $zip;
@@ -99,7 +99,7 @@ namespace Utils;
 
        $response = json_decode($responseData, true);
        if(!isset($response['response'])) {
-          return  json_encode([]);
+          return  [];
        }
        $response = $response['response'];
 
@@ -126,12 +126,12 @@ namespace Utils;
        @$json['location']['lat'] = $response['region']['latitude'];
 
        if (!isset($response['pages'])) {
-           return json_encode($json);
+           return $json;
        }
        $pages = $response['pages'];
 
        if (!isset($pages['page'][0]['tables']['table']['data']['attribute'])) {
-           return json_encode($json);
+           return $json;
        }
        $attributes = $pages['page'][0]['tables']['table']['data']['attribute'];
 
@@ -163,7 +163,7 @@ namespace Utils;
            }
        }
 
-       return json_encode($json);
+       return $json;
    }
 
    public function getDataForAllZips()
