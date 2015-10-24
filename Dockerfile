@@ -30,7 +30,8 @@ RUN \
 
 RUN \
   apt-get install -y php5-curl && \
-  rm /etc/apache2/sites-available/000-default.conf
+  rm /etc/apache2/sites-available/000-default.conf && \
+  a2enmod rewrite
 
 ADD DockerConfig/sites-available/000-default.conf /etc/apache2/sites-available/
 

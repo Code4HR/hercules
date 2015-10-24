@@ -25,25 +25,30 @@ class CrimeConsumer{
 
         $currPage = 0;
         $prevPage = 0;
-        //do {
+        do {
            $json = $this->scraper->scrapeCrime($currPage, $this->city);
-           echo sizeof($json);
-           $this->insertIntoElasticSearch($json);
+           if (sizeof($json) > 0) {
+               $this->insertIntoElasticSearch($json);
+           }
            $prevPage = $currPage;
            $currPage++;
-        //}
-        //while (count($json[$prevPage])%35 === 0);
+        }
+        while (count($json)%35 === 0);
     }
 
     private function insertIntoElasticSearch($json)
     {
         $client = new Elasticsearch\Client(['hosts' => ['http://localhost:9200']]);
-        $params = ['index' => 'hrqls', 'type' => 'crimedata'];
+        $params = [];
+        $params['index'] = 'hrqls';
+        $params['type'] = 'crimedata';
         foreach($json as $item) {
             $params['body'][] = array(
-            'doc_as_upsert' => 'true',
-            'doc' => $item
+                'create' => array(
+                    '_id' => sha1($item['link'])
+                  )
             );
+            $params['body'][] = $item;
         }
         $client->bulk($params);
 

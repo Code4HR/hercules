@@ -10,7 +10,7 @@ class Main
     public function main(Request $req, Application $app)
     {
         return $app['twig']->render('mainPage.twig', array(
-            'title' => 'Hercules'
+            'title' => 'HRQLS - Hampton Roads Quality of Life Service'
         ));
     } 
 }
