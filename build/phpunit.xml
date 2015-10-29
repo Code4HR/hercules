@@ -1,0 +1,20 @@
+<phpunit bootstrap="../tests/bootstrap.php" colors="true" verbose="true">
+  <testsuites>
+    <testsuite name="Unit Test Suite">
+      <directory>../tests/unit</directory>
+    </testsuite>
+  </testsuites>
+
+  <filter>
+    <blacklist>
+      <directory suffix=".php">../tests</directory>
+      <directory suffix=".php">../vendor</directory>
+    </blacklist>
+  </filter>
+
+  <logging>
+    <log type="coverage-html" target="../gen/build/coverage"></log>
+    <log type="junit" target="../gen/logs/junit.xml" logIncompleteSkipped="false"/>
+  </logging>
+
+</phpunit>

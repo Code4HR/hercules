@@ -7,7 +7,7 @@
 /**
  * Unit Tests for CrimConsumer
  */
- public final class CrimeConsumerTests{
+final class CrimeConsumerTests{
 
      public function insertVABeachRecord()
      {
