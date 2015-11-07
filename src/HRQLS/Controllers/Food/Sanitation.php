@@ -1,13 +1,26 @@
 <?php
+/**
+ * Controller for Food Sanitization API endpoint.
+ *
+ * @package HRQLS/Controllers
+ */
 
-namespace HRQLS\Controllers;
 namespace HRQLS\Controllers\Food;
-use Silex\Application as Application;
-use Symfony\Component\HttpFoundation\Request as Request;
-use Symfony\Component\HttpFoundation\Response as Response;
 
+use Silex\Application;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+
+/**
+ * Sanitization endpoint for the API.
+ */
 class Sanitation
 {
+    /**
+     * City endpoint list for facade data pull.
+     *
+     * @var array
+     */
     public $cities = [
         'norfolk' => 'http://api.openhealthinspection.com/vendors?after=24-10-2014&city=norfolk',
         'portsmouth' => 'http://api.openhealthinspection.com/vendors?after=24-10-2014&city=portsmouth',
@@ -18,11 +31,19 @@ class Sanitation
         'chesapeake' => 'http://api.openhealthinspection.com/vendors?after=24-10-2014&city=chesapeake'
     ];
 
+    /**
+     * Main entrypoint for Santization endpoint.
+     *
+     * @param Request     $req The request object.
+     * @param Application $app The Silex application object.
+     *
+     * @return Response
+     */
     public function main(Request $req, Application $app)
     {
         $sliderPercentage = $req->get('slidervalue');
         $response = [];
-        foreach($this->cities as $city => $url) {
+        foreach ($this->cities as $city => $url) {
             $result = file_get_contents($url);
             array_push($response, json_decode($result, true));
         }
@@ -32,8 +53,8 @@ class Sanitation
             $updatedslidervalue = (($sliderPercentage * (100 - $value) ) / 100) + $value;
             //echo $updatedslidervalue;exit;
             $sanitationdata = [];
-            foreach($response as $key => $res) {
-                $apidata = []; 
+            foreach ($response as $key => $res) {
+                $apidata = [];
                 foreach ($res as $toldata) {
                     $data['name'] = $toldata['name'];
                     $data['latitude'] = $toldata['coordinates']['latitude'];
@@ -56,5 +77,5 @@ class Sanitation
         }
 
         return new Response(json_encode($sanitationdata), 201);
-    } 
+    }
 }

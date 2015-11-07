@@ -1,8 +1,8 @@
 <?php
 
-include __DIR__ . '/../../vendor/autoload.php';
+include __DIR__ . '/../vendor/autoload.php';
 
-use Utils\ZillowClient;
+use HDS\ZillowClient;
 use Elasticsearch\Client;
 
 $client = new Client(['hosts' => ['http://localhost:9200']]);
@@ -35,3 +35,4 @@ foreach ($results as $item) {
 }
 
 $client->bulk($params);
+

@@ -57,8 +57,7 @@
     "autoload": {
         "psr-4": {
             "HRQLS\\": "src/HRQLS/",
-            "HDS\\": "src/HDS/",
-            "Utils\\": "Utils/"
+            "HDS\\": "src/HDS/"
         }
     }
 }
