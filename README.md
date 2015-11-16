@@ -19,7 +19,7 @@ The project was the Best In Show winner at the fall 2015 Hack to Help Hampton Ro
 
 # Team
 TODO: Someone add our team member github usernames and their basic roles
-- @BretFisher - PM and CfA Sponsor
+- [@BretFisher](https://github.com/bretfisher) - PM and CfA Sponsor
 
 ## Other Information
 
