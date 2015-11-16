@@ -1,3 +1,4 @@
+[![Stories in Ready](https://badge.waffle.io/Code4HR/HRQLS.png?label=ready&title=Ready)](https://waffle.io/Code4HR/HRQLS)
 # Installation
 
 1) Make sure you have docker installed and functional on the system this will be used on.  ( https://docs.docker.com/ )
