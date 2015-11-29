@@ -1,44 +1,55 @@
-FROM debian:8.1
+FROM php:apache
 
-###################
-# Package Manager Dependencies
 RUN \
   apt-get update && \
-  apt-get install -y \
-  vim \
-  curl \
+  DEBIAN_FRONTEND=noninteractive apt-get install -y \
   ant \
-  build-essential \
-  apache2 \
-  apache2-doc \
-  php5 \
-  libapache2-mod-php5 \
-  sudo \
-  make \
-  net-tools \
+  git \
+  php5-curl \
   amavisd-new \
-  libcurl4-gnutls-dev
+  libcurl4-gnutls-dev \
+  libfreetype6-dev \
+  libjpeg62-turbo-dev \
+  libmcrypt-dev \
+  libpng12-dev \
+  libbz2-dev \
+  php-pear \
+  curl \
+  && rm -r /var/lib/apt/lists/*
 
-##################
-# ElasticSearch install
-RUN \
-  curl -L -O https://download.elastic.co/elasticsearch/elasticsearch/elasticsearch-1.7.1.tar.gz && \
-  tar -xzvf ./elasticsearch-1.7.1.tar.gz && \
-  rm ./elasticsearch-1.7.1.tar.gz && \
-  mv ./elasticsearch-1.7.1 /usr/local/share/elasticsearch && \
-  /usr/local/share/elasticsearch/bin/plugin -install mobz/elasticsearch-head
+# PHP Extensions
+RUN docker-php-ext-install mcrypt zip bz2 mbstring \
+  && docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
+  && docker-php-ext-install gd
 
-RUN \
-  apt-get install -y php5-curl && \
-  rm /etc/apache2/sites-available/000-default.conf && \
-  a2enmod rewrite
+# Memory Limit
+RUN echo "memory_limit=1024M" > $PHP_INI_DIR/conf.d/memory-limit.ini
 
-ADD DockerConfig/sites-available/000-default.conf /etc/apache2/sites-available/
+#install composer
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin/ --filename=composer
+#RUN curl -sS https://getcomposer.org/installer | php
+#RUN mv composer.phar /usr/local/bin/composer
 
-###################
-# Work Directory
+# Set the WORKDIR to /app so all following commands run in /app
 WORKDIR /var/www/html
+#WORKDIR /app
 
-###################
-# Container Command
-CMD ["/bin/bash"]
+# Copy composer files into the app directory.
+COPY composer.json composer.lock ./
+
+# Install dependencies with Composer.
+# --prefer-source fixes issues with download limits on Github.
+# --no-interaction makes sure composer can run fully automated
+RUN composer install --prefer-source --no-interaction
+
+# copy in source files
+COPY apache.conf /etc/apache2/sites-available/
+RUN a2enmod rewrite
+COPY . /var/www/html
+#WORKDIR /var/www/html
+
+# run composer
+#RUN php composer install
+
+EXPOSE 80
+CMD ["apache2-foreground"]
