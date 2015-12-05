@@ -13,7 +13,7 @@
   </filter>
 
   <logging>
-    <log type="coverage-html" target="../gen/build/coverage"></log>
+    <log type="coverage-html" target="../gen/coverage"></log>
     <log type="junit" target="../gen/logs/junit.xml" logIncompleteSkipped="false"/>
   </logging>
 
