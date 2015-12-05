@@ -15,7 +15,7 @@
   <property name="PHPARGS" value='-d memory_limit=512M -d include_path="./" -d display_errors="On" -d error_reporting=-1'/>
 
   <target name="build"
-    depends="prepare,lint,phploc,phpcs,phpunit"
+    depends="prepare,lint,phploc,phpcs,phpdoc,phpunit"
     description="Meant for humans."/>
 
   <target name="build-jenkins"
@@ -109,6 +109,16 @@
         />
     </apply>
 
+  </target>
+
+  <target name="phpdoc"
+      description="Perform php documentation creation">
+    <exec executable="${tools.dir}/phpdoc">
+      <arg value="-d" />
+      <arg path="${basedir}/src" />
+      <arg value="-t" />
+      <arg path="${gen.dir}/api" />
+    </exec>
   </target>
 
   <target name="phpmd"

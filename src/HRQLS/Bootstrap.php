@@ -1,6 +1,10 @@
 <?php
 /**
- * This is the first application file that gets loaded by the index.php file.
+ * This is the main bootstrap for the HRQLS Application.
+ *
+ * When a new request comes in, this class is instantiated and spins up
+ * the Silex framework for THAT REQUEST.  It does not persist between
+ * requests.
  *
  * @package HRQLS
  */
@@ -10,6 +14,7 @@ use Silex\Application;
 use Silex\Provider\TwigServiceProvider;
 use Monolog\Logger;
 use JsonSchema\Uri\UriRetriever;
+use Elasticsearch\ClientBuilder;
 
 /**
  * The class that manages startup of the application.
@@ -146,6 +151,19 @@ class Bootstrap
             array(
                 'twig.path' => __DIR__ . '/Views'
             )
+        );
+    }
+
+    /**
+     * Create Service Providers for any database connections needed.
+     *
+     * @return void
+     */
+    public function connectDatabases()
+    {
+        $this->app->register(
+            new ElasticSearchServiceProvider(ClientBuilder::create()),
+            [ 'elasticsearch.url' => $this->config->databases->elasticsearch->url ]
         );
     }
 
