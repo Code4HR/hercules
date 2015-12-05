@@ -1,13 +1,29 @@
 <?php
+/**
+ * Controller for Cost of Living endpoint.
+ *
+ * @package HRQLS/Controllers
+ */
 namespace HRQLS\Controllers;
 
-use Silex\Application as Application;
+use Silex\Application;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Elasticsearch\Client;
 
+/**
+ * Controller for Cost of Living endpoint.
+ */
 class CoL
 {
+    /**
+     * Method that handles the main entrypoint for the cost of living endpoint.
+     *
+     * @param Request     $req The request object.
+     * @param Application $app The silex application object.
+     *
+     * @return Response
+     */
     public function main(Request $req, Application $app)
     {
         $client = new Client();
@@ -67,18 +83,31 @@ class CoL
         $averageTurn = $averageTurnover['total'] / $averageTurnover['number'];
         $slidervalue = $req->get('slidervalue');
         foreach ($results as $zip) {
-          $sliderInfo = $this->calculate($slidervalue);
-          $weight = $this->determineWeight($sliderInfo, $zip['_source']['avgHomeValueIndex'], $averageHouse, $maxHouseValue, $minHouseValue);
-          $responseObject[] = array(
-              'lat' => $zip['_source']['location']['lat'],
-              'lon' => $zip['_source']['location']['lon'],
-              'weight' => $weight
+            $sliderInfo = $this->calculate($slidervalue);
+            $weight = $this->determineWeight(
+                $sliderInfo,
+                $zip['_source']['avgHomeValueIndex'],
+                $averageHouse,
+                $maxHouseValue,
+                $minHouseValue
+            );
+            $responseObject[] = array(
+                'lat' => $zip['_source']['location']['lat'],
+                'lon' => $zip['_source']['location']['lon'],
+                'weight' => $weight
             );
         }
 
         return new Response(json_encode($responseObject), 200);
     }
 
+    /**
+     * Method for calculating the direction and distance from the mid point.
+     *
+     * @param string $slider Value the slider has.
+     *
+     * @return array
+     */
     private function calculate($slider)
     {
         $direction = false;
@@ -93,7 +122,20 @@ class CoL
         return array('direction' => $direction, 'distance' => $distance);
     }
 
-    private function determineWeight($sliderInfo, $currentValue, $average, $max, $min)
+    /**
+     * Determines the weight of a given value based on a relative scale.
+     *
+     * This function probably needs some help.  It didn't seem to work right in the hackathon.
+     *
+     * @param array  $sliderInfo   The information on the slider.
+     * @param string $currentValue The currentValue of the zip.
+     * @param string $average      The average value.
+     * @param string $max          The maximum value.
+     * @param string $min          The minimum value.
+     *
+     * @return string
+     */
+    private function determineWeight(array $sliderInfo, $currentValue, $average, $max, $min)
     {
         $targetValue = 0;
         $scale = 0;

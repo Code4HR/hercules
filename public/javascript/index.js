@@ -63,7 +63,7 @@ function initAutocomplete() {
             dataType: 'json',
             success: function(crimeData) {
                 for (var elem = 0, max = crimeData.length; elem < max; elem++) {
-                    crimeHeatMapData.push({location: new google.maps.LatLng(crimeData[elem].latitude, crimeData[elem].longitude), weight: crimeData[elem].severity});
+                    crimeHeatMapData.push({location: new google.maps.LatLng(crimeData[elem].latitude, crimeData[elem].longitude), weight: Math.random()*12});
                 }
                 crimeheatmap.set('data', crimeHeatMapData);
             }
@@ -90,7 +90,6 @@ function initAutocomplete() {
         var newHeatMapData = [];
         var data = {};
         data.slidervalue = $(this).text();
-        alert(data.slidervalue);
         $.ajax({
             method: 'GET',
             url: '/food/sanitation',
