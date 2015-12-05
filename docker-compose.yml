@@ -1,0 +1,17 @@
+hercules:
+  build: .
+  #dockerfile:
+  ports: 
+    - 8081:8081
+  links:
+    - elasticsearch
+explore:
+  build: ../explore
+  #dockerfile: 
+  ports: 
+    - 8080:8080
+  links:
+    - elasticsearch
+    - hercules
+elasticsearch:
+  image: elasticsearch:2.1

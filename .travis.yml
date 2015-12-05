@@ -1,0 +1,9 @@
+language: php
+sudo: required
+services:
+  - docker
+php:
+  - 5.4
+script: ant phpunit
+#notifications:
+    #slack: codeforva:qoVMt69QKCSTenimruZHUKbu

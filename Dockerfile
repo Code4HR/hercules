@@ -1,4 +1,4 @@
-FROM php:apache
+FROM php:5.4-apache
 
 RUN \
   apt-get update && \
