@@ -1,6 +1,6 @@
 Hercules: Hampton Roads Quality of Life Service
 ===============================================
-Want to help? We track [this project in Waffle.io](https://waffle.io/Code4HR/HRQLS) [![Stories in Ready](https://badge.waffle.io/Code4HR/HRQLS.png?label=ready&title=Ready)](https://waffle.io/Code4HR/HRQLS)
+Want to help? We track [this project in Waffle.io](https://waffle.io/Code4HR/hercules) [![Stories in Ready](https://badge.waffle.io/Code4HR/hercules.png?label=ready&title=Ready)](https://waffle.io/Code4HR/hercules)
 
 # About
 HRQLS is a data analytics project to help citizens get facts and make decisions by layering various data points on maps. It's an expirement on pulling together various demographics, city data sets, and other local data layers to see if new insights can be gained from seeing it mashed together.
