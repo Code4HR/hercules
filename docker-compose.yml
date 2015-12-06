@@ -14,4 +14,5 @@ explore:
     - elasticsearch
     - hercules
 elasticsearch:
-  image: elasticsearch:2.1
+  build: ../elasticsearch
+  #image: elasticsearch:2.1

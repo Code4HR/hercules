@@ -2,7 +2,7 @@
   "siteName": "Hercules Project: HRQLS",
   "databases": {
     "elasticsearch": {
-      "url": "http://localhost:9200"
+      "url": "http://elasticsearch:9200"
     }
   },
   "routes": {

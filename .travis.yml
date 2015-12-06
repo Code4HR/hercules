@@ -1,9 +1,16 @@
-language: php
 sudo: required
+
+language: php
+
 services:
   - docker
-php:
-  - 5.4
+
+before_install:
+  - docker pull code4hr/hercules
+  #- docker run -d -p 127.0.0.1:80:8080 code4hr/hercules
+  #- docker ps -a
+  - docker run code4hr/hercules /bin/sh -c "cd /src; ant phpunit"
+
 script: ant phpunit
 #notifications:
     #slack: codeforva:qoVMt69QKCSTenimruZHUKbu

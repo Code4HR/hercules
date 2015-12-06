@@ -1,4 +1,4 @@
-FROM php:5.4-apache
+FROM php:5.5-apache
 
 RUN \
   apt-get update && \
@@ -27,12 +27,8 @@ RUN echo "memory_limit=1024M" > $PHP_INI_DIR/conf.d/memory-limit.ini
 
 #install composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin/ --filename=composer
-#RUN curl -sS https://getcomposer.org/installer | php
-#RUN mv composer.phar /usr/local/bin/composer
 
-# Set the WORKDIR to /app so all following commands run in /app
 WORKDIR /var/www/html
-#WORKDIR /app
 
 # Copy composer files into the app directory.
 COPY composer.json composer.lock ./
@@ -46,10 +42,6 @@ RUN composer install --prefer-source --no-interaction
 COPY apache.conf /etc/apache2/sites-available/
 RUN a2enmod rewrite
 COPY . /var/www/html
-#WORKDIR /var/www/html
-
-# run composer
-#RUN php composer install
 
 EXPOSE 80
 CMD ["apache2-foreground"]
