@@ -40,6 +40,7 @@ RUN composer install --prefer-source --no-interaction
 
 # copy in source files
 COPY apache.conf /etc/apache2/sites-available/
+RUN a2ensite apache
 RUN a2enmod rewrite
 COPY . /var/www/html
 

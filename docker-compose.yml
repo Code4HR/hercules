@@ -1,18 +1,34 @@
+# use docker-compose build, then docker-compose up
+# for development, this will run local containers for 
+# hercules API, explore web frontend, and elasticsearch data store
+#
+
+elasticsearch:
+  build: hercules-es
+  #image: elasticsearch:2.1
 hercules:
   build: .
-  #dockerfile:
+  # this will be available from your host OS on 8081
   ports: 
-    - 8081:8081
+    - "8082:80"
+  expose:
+    - "80"
   links:
     - elasticsearch
 explore:
+  #be sure explore is cloned and at same level as hercules
   build: ../explore
-  #dockerfile: 
+  # this will be available from your host OS on 8080
   ports: 
-    - 8080:8080
+    - "8081:80"
+  expose:
+    - "80"
   links:
-    - elasticsearch
     - hercules
-elasticsearch:
-  build: ../elasticsearch
-  #image: elasticsearch:2.1
+nginx:
+  build: hercules-nginx
+  ports:
+    - "8080:8080"
+  links:
+    - hercules
+    - explore
