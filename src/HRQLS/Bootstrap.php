@@ -65,27 +65,6 @@ class Bootstrap
      */
     private $logger;
 
-
-    /**
-     * Array of URL's used by Crime Scraper
-     *
-     * @var array
-     */
-    private $crimeURLs = [
-        'chesapeake' => 'http://hamptonroads.com/newsdata/crime/chesapeake/search/rss?me=%2Fchesapeake%2Fsearch&' .
-            'type=&near=&radius=&op=Submit&form_token=9dc84572393ad9c68f54cad6549692f3&form_id=crime_searchform',
-        'newportnews' => 'http://hamptonroads.com/newsdata/crime/newport-news/search/rss?me=%2Fnewport-news%2Fsearch' .
-            '&type=&near=&radius=&op=Submit&form_token=9dc84572393ad9c68f54cad6549692f3&form_id=crime_searchform',
-        'norfolk' => 'http://hamptonroads.com/newsdata/crime/norfolk/search/rss?me=%2Fnorfolk%2Fsearch&type=&near=&' .
-            'radius=&op=Submit&form_token=9dc84572393ad9c68f54cad6549692f3&form_id=crime_searchform',
-        'portsmouth' => 'http://hamptonroads.com/newsdata/crime/portsmouth/search/rss?me=%2Fportsmouth%2Fsearch&' .
-            'type=&near=&radius=&op=Submit&form_token=9dc84572393ad9c68f54cad6549692f3&form_id=crime_searchform',
-        'suffolk' => 'http://hamptonroads.com/newsdata/crime/suffolk/search?me=%2Fsuffolk%2Fsearch&type=&near=&' .
-            'radius=&op=Submit&form_token=9dc84572393ad9c68f54cad6549692f3&form_id=crime_searchform',
-        'vabeach' => 'http://hamptonroads.com/newsdata/crime/virginia-beach/search/rss?me=/virginia-beach/search&' .
-            'type=&near=&radius=&op=Submit&form_token=9dc84572393ad9c68f54cad6549692f3&form_id=crime_searchform',
-    ];
-
     /**
      * The primary bootstrap for the application.
      *
@@ -99,10 +78,6 @@ class Bootstrap
     public function __construct(Application $app)
     {
         $this->app = $app;
-        foreach ($this->crimeURLS as $city => $url) {
-            $objCrime = new CrimeConsumer($city, $url);
-            $objCrime->consume();
-        }
     }
 
     /**
