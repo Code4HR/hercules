@@ -2,10 +2,11 @@
 /**
  * This is the main Scraper for crime data.
  *
- * @package HRQLS
+ * @package    HRQLS
  * @subpackage HDS
- * @author Derek
+ * @author     Derek
  */
+namespace HDS;
 
 use elasticsearch\Client;
 use Utils\Scraper;
@@ -31,11 +32,11 @@ class CrimeClient
     /**
      * CrimeConsumer Constructor.
      *
-     * @param GuzzleHttp\Client client used to retrieve data from Pilot Online Site.
+     * @param Client $webClient Client used to retrieve data from Pilot Online Site.
      *
      * @return void
      */
-    public function __construct(GuzzleHttp\Client $webClient)
+    public function __construct(Client $webClient)
     {
         $this->client = $webClient;
     }
@@ -43,16 +44,16 @@ class CrimeClient
     /**
      * Primary action function that consumes the data.
      *
-     *@param $city the city to pull crime date for.
-     *@param $cityUrl the City specific URL to the Virginia Pilots Crime Stats RSS Feed.
+     * @param string $city    The city to pull crime date for.
+     * @param string $cityUrl The City specific URL to the Virginia Pilots Crime Stats RSS Feed.
      *
+     * @throws Exception A general exception.
      * @return void
      */
     public function consume($city, $cityUrl)
     {
         $respone = $this->Client->request('GET', $cityUrl);
-        if(!$response->getStatusCode() === 200)
-        {
+        if (!$response->getStatusCode() === 200) {
             throw new Exception("Failed to pull crime date for {$city}");
         }
 
@@ -69,6 +70,14 @@ class CrimeClient
         } while (count($json)%35 === 0);
     }
 
+    /**
+     * Scrapes Crime Data.
+     *
+     * @param string  $city The city to scrape crime data foreach.
+     * @param integer $page The current page number.
+     *
+     * @return boolean
+     */
     public function scrapeCrime($city, $page = 0)
     {
         $url = $this->source . '&page=' . $page;
@@ -81,21 +90,20 @@ class CrimeClient
             'title' => null,
             'location' => [
                 'lat' => null,
-                'lon' => null,
+            'lon' => null,
             ],
             'link' => null,
-            'date_occured' => New \DateTime(),
+            'date_occured' => new \DateTime(),
             'severity' => 0,
             'city' => null,
         ];
 
         $items = $data['channel'];
 
-        foreach($items['item'] as $item)
-        {
-           $title;
-           $dateOccured;
-            if(isset($item['title'])){
+        foreach ($items['item'] as $item) {
+            $title;
+            $dateOccured;
+            if (isset($item['title'])) {
                 $start = $end = 0;
                 $start = strpos($item['title'], '(');
                 $end = strpos($item['title'], ')');
@@ -107,112 +115,118 @@ class CrimeClient
             }
 
             if (isset($item['loc'])) {
-               $json['location']['lon'] = $item['loc']['lon'];
-               $json['location']['lat'] = $item['loc']['lat'];
+                $json['location']['lon'] = $item['loc']['lon'];
+                $json['location']['lat'] = $item['loc']['lat'];
             }
 
-            if(isset($item['link'])) {
+            if (isset($item['link'])) {
                 $json['link'] = $item['link'];
             }
 
             $json['city'] = $city;
             array_push($jsonArray, $json);
         }
-        print_r($jsonArray);
+
         return $jsonArray;
     }
 
+    /**
+     * Calculates severity.
+     *
+     * @param string $crime The crime Name.
+     *
+     * @return int The severity of the crime.
+     */
     private function calcSeverity($crime)
     {
-        switch($crime)
-       {
-           case 'Rape':
-           case 'Sexual battery':
-           case 'Bomb threat':
-           case 'Statutory rape/ carnal knowledge':
-              return 10;
-           case 'Death investigation':
-           case 'Attempted robbery':
-           case 'Robbery':
-           case 'Aggravated assault':
-              return 9;
-          case 'Assault, simple, domestic':
-          case 'Simple assault':
-          case 'Arson':
-          case 'Attempted arson':
-              return 8;
-          case 'Weapons offense':
-          case 'Pornography/ obscene material':
-          case 'Vehicle theft':
-          case 'Child abuse':
-              return 7;
-          case 'Destruction of property':
-          case 'Attempted destruction of property':
-          case 'Molesting':
-          case 'Tampering with auto':
-          case 'Forcible indecent liberties':
-          case 'Indecent exposure':
-              return 6;
-          case 'Hit and run':
-          case 'Threaten bodily harm':
-          case 'Violation of protection order':
-          case 'Extortion':
-          case 'Attempted family offense, nonviolent, child abuse':
-          case 'Child neglect':
-          case 'Abduction/kidnapping':
-          case 'Impersonating a police officer':
-          case 'Attempted vehicle theft':
-              return 5;
-              //Misdemeanors
-          case 'Dui':
-          case 'Drug offense':
-          case 'Fraud':
-          case 'Attempted fraud':
-          case 'Larceny':
-          case 'Attempted suicide':
-          case 'Attempted burglary':
-          case 'Burglary':
-          case 'Attempted larceny':
-          case 'Attempted extortion':
-          case 'Forgery':
-          case 'Suicide attempt':
-          case 'Overdose':
-          case 'Suicide':
-          case 'Child endangerment':
-          case 'Stalking':
-          case 'Attempted shoplifting':
-          case 'Concealment/ price changing':
-          case 'Attempted concealment/price changing':
-          case 'Obstructing justice':
-          case 'Liquor law violations':
-          case 'Attempted counterfeiting/ forgery, all others':
-              return 4;
-          case 'Throwing object at moving vehicle':
-          case 'Counterfeiting/forgery':
-          case 'Unauthorized use of vehicle':
-          case 'Cruelty to animals':
-          case 'Embezzlement':
-          case 'Contributing to the delinquency of a minor':
-          case 'Peeping':
-              return 3;
-          case 'Missing person':
-          case 'Immoral conduct':
-          case 'Providing false information to police':
-          case 'Trespassing':
-          case 'Disturbing the peace':
-          case 'Attempted trespass':
-          case 'Disorderly conduct':
-              return 2;
-          case 'Attempted all other reportable offenses':
-          case 'All other reportable offenses':
-          case 'Annoying phone calls':
-          case 'Runaway':
-          case 'Cursing/ obscene language':
-          case 'Obscene phone calls':
-              return 1;
-          default:
-              return 0;
-       }/**/
+        switch ($crime) {
+            case 'Rape':
+            case 'Sexual battery':
+            case 'Bomb threat':
+            case 'Statutory rape/ carnal knowledge':
+                return 10;
+            case 'Death investigation':
+            case 'Attempted robbery':
+            case 'Robbery':
+            case 'Aggravated assault':
+                return 9;
+            case 'Assault, simple, domestic':
+            case 'Simple assault':
+            case 'Arson':
+            case 'Attempted arson':
+                return 8;
+            case 'Weapons offense':
+            case 'Pornography/ obscene material':
+            case 'Vehicle theft':
+            case 'Child abuse':
+                return 7;
+            case 'Destruction of property':
+            case 'Attempted destruction of property':
+            case 'Molesting':
+            case 'Tampering with auto':
+            case 'Forcible indecent liberties':
+            case 'Indecent exposure':
+                return 6;
+            case 'Hit and run':
+            case 'Threaten bodily harm':
+            case 'Violation of protection order':
+            case 'Extortion':
+            case 'Attempted family offense, nonviolent, child abuse':
+            case 'Child neglect':
+            case 'Abduction/kidnapping':
+            case 'Impersonating a police officer':
+            case 'Attempted vehicle theft':
+                return 5;
+                //Misdemeanors
+            case 'Dui':
+            case 'Drug offense':
+            case 'Fraud':
+            case 'Attempted fraud':
+            case 'Larceny':
+            case 'Attempted suicide':
+            case 'Attempted burglary':
+            case 'Burglary':
+            case 'Attempted larceny':
+            case 'Attempted extortion':
+            case 'Forgery':
+            case 'Suicide attempt':
+            case 'Overdose':
+            case 'Suicide':
+            case 'Child endangerment':
+            case 'Stalking':
+            case 'Attempted shoplifting':
+            case 'Concealment/ price changing':
+            case 'Attempted concealment/price changing':
+            case 'Obstructing justice':
+            case 'Liquor law violations':
+            case 'Attempted counterfeiting/ forgery, all others':
+                return 4;
+            case 'Throwing object at moving vehicle':
+            case 'Counterfeiting/forgery':
+            case 'Unauthorized use of vehicle':
+            case 'Cruelty to animals':
+            case 'Embezzlement':
+            case 'Contributing to the delinquency of a minor':
+            case 'Peeping':
+                return 3;
+            case 'Missing person':
+            case 'Immoral conduct':
+            case 'Providing false information to police':
+            case 'Trespassing':
+            case 'Disturbing the peace':
+            case 'Attempted trespass':
+            case 'Disorderly conduct':
+                return 2;
+            case 'Attempted all other reportable offenses':
+            case 'All other reportable offenses':
+            case 'Annoying phone calls':
+            case 'Runaway':
+            case 'Cursing/ obscene language':
+            case 'Obscene phone calls':
+                return 1;
+            default:
+                return 0;
+        }
     }
 
     /**
@@ -230,10 +244,10 @@ class CrimeClient
         $params['type'] = 'crimedata';
         foreach ($json as $item) {
             $params['body'][] = array(
-                'create' => array(
-                    '_id' => sha1($item['link'])
-                  )
-            );
+                    'create' => array(
+                        '_id' => sha1($item['link'])
+                        )
+                    );
             $params['body'][] = $item;
         }
         print_r($params);

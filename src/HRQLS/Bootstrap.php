@@ -15,6 +15,7 @@ use Silex\Provider\TwigServiceProvider;
 use Monolog\Logger;
 use JsonSchema\Uri\UriRetriever;
 use Elasticsearch\ClientBuilder;
+use GuzzleHttp\Client;
 
 /**
  * The class that manages startup of the application.
@@ -111,7 +112,7 @@ class Bootstrap
 
         $this->config = [];
 
-        $this->config = json_decode(file_get_contents(__DIR__ . '/config/routes.json'));
+        $this->config = json_decode(file_get_contents(__DIR__ . '/config/Hercules.json'));
     }
 
     /**
@@ -140,6 +141,16 @@ class Bootstrap
             new ElasticSearchServiceProvider(ClientBuilder::create()),
             [ 'elasticsearch.url' => $this->config->databases->elasticsearch->url ]
         );
+    }
+
+    /**
+     * Creates various HTTP Clients (i.e. Guzzle) for facade layer requests.
+     *
+     * @return void
+     */
+    public function loadHttpClients()
+    {
+        $this->app['GuzzleHttpClient'] = new GuzzleHttpClient(new Client());
     }
 
     /**
