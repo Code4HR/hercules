@@ -12,6 +12,7 @@ namespace HRQLS;
 
 use Silex\Application;
 use Silex\Provider\TwigServiceProvider;
+use HRQLS\Models\ElasticSearchServiceProvider;
 use Monolog\Logger;
 use JsonSchema\Uri\UriRetriever;
 use Elasticsearch\ClientBuilder;
@@ -137,9 +138,10 @@ class Bootstrap
      */
     public function connectDatabases()
     {
+        $this->app['elasticsearch.url'] = $this->config->databases->elasticsearch->url;
         $this->app->register(
             new ElasticSearchServiceProvider(ClientBuilder::create()),
-            [ 'elasticsearch.url' => $this->config->databases->elasticsearch->url ]
+            []
         );
     }
 
