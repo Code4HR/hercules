@@ -7,19 +7,19 @@
 use GuzzleHttp\Client;
 
 /**
- * defines GuzzleHttpClient
+ * Defines GuzzleProvider Class.
  */
-final class GuzzleHttpClient
+final class GuzzleProvider
 {
     /**
-     * The Guzzle HTTp Client
+     * The Guzzle HTTP Client used by this provider to make requests
      *
      * @var Guzzle Client
      */
     private $client;
 
      /**
-      * Registers a Guzzle client
+      * Registers a Guzzle client with Silex App
       *
       * @param Client $guzzleClient A GuzzleHttp\Client object.
       */

@@ -13,6 +13,7 @@ namespace HRQLS;
 use Silex\Application;
 use Silex\Provider\TwigServiceProvider;
 use HRQLS\Models\ElasticSearchServiceProvider;
+use HRQLS\Models\GuzzleProvider;
 use Monolog\Logger;
 use JsonSchema\Uri\UriRetriever;
 use Elasticsearch\ClientBuilder;
@@ -152,7 +153,7 @@ class Bootstrap
      */
     public function loadHttpClients()
     {
-        $this->app['GuzzleHttpClient'] = new GuzzleHttpClient(new Client());
+        $this->app['guzzle'] = new GuzzleProvider(new Client());
     }
 
     /**
