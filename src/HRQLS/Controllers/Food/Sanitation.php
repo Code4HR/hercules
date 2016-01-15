@@ -14,7 +14,7 @@ use Symfony\Component\HttpFoundation\Response;
 /**
  * Sanitization endpoint for the API.
  */
-class Sanitation
+final class Sanitation
 {
     /**
      * City endpoint list for facade data pull.
@@ -51,7 +51,6 @@ class Sanitation
         $sanitationdata = [];
         foreach ([50, 75, 80, 90] as $value) {
             $updatedslidervalue = (($sliderPercentage * (100 - $value) ) / 100) + $value;
-            //echo $updatedslidervalue;exit;
             $sanitationdata = [];
             foreach ($response as $key => $res) {
                 $apidata = [];
@@ -65,7 +64,7 @@ class Sanitation
                     if ($score >= $updatedslidervalue) {
                         $sanitationdata[] = $data;
                     }
-                    
+
                     if (count($apidata) > 50) {
                         break;
                     }

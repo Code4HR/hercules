@@ -2,8 +2,8 @@ FROM debian:8.1
 
 ###################
 # Package Manager Dependencies
+RUN apt-get update
 RUN \
-  apt-get update && \
   apt-get install -y \
   vim \
   curl \
