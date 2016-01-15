@@ -27,7 +27,6 @@ class Crime
      */
     public function main(Request $req, Application $app)
     {
-        $client = new Client(['hosts' => ['http://localhost:9200']]);
         $sliderPercentage = $req->get('slidervalue') / 100;
         $slider = floor($sliderPercentage * 12) ;
         $params = array(
@@ -45,7 +44,7 @@ class Crime
                 ]
             ]
         );
-        $result = $client->search($params);
+        $result = $app['elasticsearch']->search($params);
         $node = [];
         if ($result['hits']['total'] > 0) {
             $node = $result['hits']['hits'];
