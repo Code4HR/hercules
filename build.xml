@@ -100,9 +100,8 @@
       <arg value="--report-width=120" />
       <arg value="--report-full" />
       <arg value="--report-gitblame" />
-      <arg path="${basedir}/src/HRQLS" />
-      <arg path="${basedir}/src/HDS" />
-
+      <arg path="${basedir}/src" />
+      <arg path="${basedir}/tests" />
 
       <fileset includesfile="${build.dir}/lint.inc"
         dir="${basedir}"

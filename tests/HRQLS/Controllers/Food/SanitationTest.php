@@ -1,9 +1,15 @@
 <?php
-
+/**
+ * Sanitation Controller Unit Tests
+ * @package tests/HRQLS/Controllers
+ */
 use Silex\Application;
 use Symfony\Component\HttpFoundation\Request;
 use HRQLS\Controllers\Food\Sanitaton;
 
+/**
+ * Defines Sanitation Controllers Unit Tests
+ */
 final class SanitationTest extends PHPUnit_Framework_TestCase
 {
     /**
