@@ -4,17 +4,12 @@ RUN \
   apt-get update && \
   DEBIAN_FRONTEND=noninteractive apt-get install -y \
   ant \
-  git \
-  php5-curl \
+  build-essential \
+  sudo \
+  make \
+  net-tools \
   amavisd-new \
   libcurl4-gnutls-dev \
-  libfreetype6-dev \
-  libjpeg62-turbo-dev \
-  libmcrypt-dev \
-  libpng12-dev \
-  libbz2-dev \
-  php-pear \
-  curl \
   && rm -r /var/lib/apt/lists/*
 
 # PHP Extensions

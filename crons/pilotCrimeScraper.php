@@ -2,36 +2,37 @@
 
 include __DIR__ . '/../../vendor/autoload.php';
 
-try{
-$consumer = new CrimeConsumer('VA Beach', 'http://hamptonroads.com/newsdata/crime/virginia-beach/search/rss?type=&near=&radius=&from%5Bmonth%5D=10&from%5Bday%5D=1&from%5Byear%5D=2015&to%5Bmonth%5D=10&to%5Bday%5D=23&to%5Byear%5D=2015&op=Submit&form_id=crime_searchform');
-$consumer->consume();
-}
-catch (Exception $e)
-{
-    echo 'Failed VA Beach';
-}
-try{
-$consumer = new CrimeConsumer('Norfolk', 'http://hamptonroads.com/newsdata/crime/norfolk/search/rss?me=%2Fnorfolk%2Fsearch&type=&near=&radius=&op=Submit&form_token=9dc84572393ad9c68f54cad6549692f3&form_id=crime_searchform');
-$consumer->consume();
-}
-catch(Exception $e)
-{
-        echo 'Failed Norfolk';
-}
-try{
-$consumer = new CrimeConsumer('Portsmouth', 'http://hamptonroads.com/newsdata/crime/portsmouth/search/rss?type=&near=&radius=&from%5Bmonth%5D=10&from%5Bday%5D=1&from%5Byear%5D=2015&to%5Bmonth%5D=10&to%5Bday%5D=23&to%5Byear%5D=2015&op=Submit&form_id=crime_searchform');
-$consumer->consume();
-}
-catch (Exception $e)
-{
-    echo 'Failed Portsmouth';
-}
-try{
-$consumer = new CrimeConsumer('Suffolk', 'http://hamptonroads.com/newsdata/crime/suffolk/search/rss?type=&near=&radius=&from%5Bmonth%5D=10&from%5Bday%5D=1&from%5Byear%5D=2015&to%5Bmonth%5D=10&to%5Bday%5D=23&to%5Byear%5D=2015&op=Submit&form_id=crime_searchform');
-$consumer->consume();
-}
-catch (Exception $E)
-{
-    echo 'Failed Suffolk';
-}
+$bootstrap = new HRQLS\Bootstrap(new Silex\Application());
 
+$bootstrap->loadConfig();
+
+$bootstrap->connectDatabases();
+
+$bootstrap->startupSite();
+
+$webClient = new GuzzleHttp\Client();
+$consumer = new CrimeClient($webClient);
+
+foreach($bootstrap->config['cities'] as $city)
+{
+    $toDate = new \DateTime();
+    $fromDate = new \DateTime('-7 days');
+    list($toYear, $toMonth, $toDay) = explode('-', $toDate->format('Y-m-d'));
+    list($fromYear, $fromMonth, $fromDay) = explode('-', $fromDate->format('Y-m-d'));
+    $cityUrl = str_replace('{city}', $city, $bootstrap->config['crimeUrl']);
+    $cityUrl = str_replace('{toYear}', $toYear, $cityUrl);
+    $cityUrl = str_replace('{toMonth}', $toMonth, $cityUrl);
+    $cityUrl = str_replace('{toDay}', $toDay, $cityUrl);
+    $cityUrl = str_replace('{fromYear}', $fromYear, $cityUrl);
+    $cityUrl = str_replace('{fromMonth}', $fromMonth, $cityUrl);
+    $cityUrl = str_replace('{fromDay}', $fromDay, $cityUrl);
+
+    try{
+        $consumer->consume($city, $cityUrl);
+    }
+    catch(Exception $e)
+    {
+        echo "Failed to pull crime data for {$city}";
+    }
+    //@TODO  Update record in ES to show city has current crime data
+}

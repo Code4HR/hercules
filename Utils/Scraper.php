@@ -22,24 +22,6 @@
          $this->source = $url;
      }
 
-     public function scrape()
-     {
-         /*header('Content-Type: application/json');
-         $json = array();
-
-         $currPage = 0;
-         $prevPage = 0;
-         do {
-            $retVal = $this->scrapeCrime($currPage);
-            array_push($json, $retVal);
-            $prevPage = $currPage;
-            $currPage++;
-         }
-         while ($currPage !== 2);//count($json[$prevPage])%35 === 0);
-
-         file_put_contents($this->destination, json_encode($json));*/
-     }
-
      public function scrapeCrime($page = 0, $city)
      {
          $url = $this->source . '&page=' . $page;
@@ -87,7 +69,6 @@
              }
 
              $json['city'] = $city;
-             //print_r($json['city']);
              array_push($jsonArray, $json);
          }
          print_r($jsonArray);
