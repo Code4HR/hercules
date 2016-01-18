@@ -8,6 +8,8 @@ $bootstrap->loadConfig();
 
 $bootstrap->startRenderEngine();
 
+$bootstrap->connectDatabases();
+
 $bootstrap->registerRoutes();
 
 $bootstrap->startupSite();

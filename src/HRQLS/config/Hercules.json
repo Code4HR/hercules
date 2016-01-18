@@ -1,5 +1,10 @@
 {
   "siteName": "Hercules Project: HRQLS",
+  "databases": {
+    "elasticsearch": {
+      "url": "http://localhost:9200"
+    }
+  },
   "routes": {
     "get": [
       {
@@ -11,12 +16,8 @@
         "controller": "HRQLS\\Controllers\\Crime::main"
       },
       {
-        "url": "/col",
-        "controller": "HRQLS\\Controllers\\CoL::main"
-      },
-      {
         "url": "/food/sanitation",
-        "controller": "HRQLS\\Controllers\\Food\\Sanitation::main" 
+        "controller": "HRQLS\\Controllers\\Food\\Sanitation::main"
       }
     ]
   }

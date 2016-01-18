@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="HRQLS - Hercules Data Project"
+  default="build"
+  >
+
+  <!-- Allow ant-contrib tasks -->
+  <taskdef resource="net/sf/antcontrib/antcontrib.properties"/>
+
+  <property name="tools.dir" value="${basedir}/vendor/bin"/>
+  <property name="build.dir" value="${basedir}/build"/>
+  <property name="gen.dir" value="${basedir}/gen"/>
+  <property name="tmp.dir" value="${gen.dir}/tmp"/>
+  <property name="cache.dir" value="${gen.dir}/cache"/>
+
+  <property name="PHPARGS" value='-d memory_limit=512M -d include_path="./" -d display_errors="On" -d error_reporting=-1'/>
+
+  <target name="build"
+    depends="prepare,lint,phploc,phpcs,phpdoc,phpunit"
+    description="Meant for humans."/>
+
+  <target name="build-jenkins"
+    depends="prepare,lint,phploc,phpcs,phpunit"
+    description="Meant to be run by Jenkins as part of the build process."/>
+
+  <target name="build-deploy"
+    depends="prepare,lint,phploc,phpcs,phpunit"
+    description="To be run prior to deployment."
+    >
+    <exec executable="composer" failonerror="true">
+      <arg value="install"/>
+      <arg value="--no-dev"/>
+    </exec>
+  </target>
+
+
+  <!-- Start from scratch -->
+  <target name="clean"
+    unless="clean.done"
+    description="Cleanup build artifacts.  Does not remove cache.">
+    <delete dir="${gen.dir}/api"/>
+    <delete dir="${gen.dir}/coverage"/>
+    <delete dir="${gen.dir}/logs"/>
+    <delete dir="${gen.dir}/logs/coverage"/>
+    <delete dir="${gen.dir}/pdepend"/>
+    <delete dir="${gen.dir}/phpdox"/>
+    <delete dir="${tmp.dir}"/>
+    <property name="clean.done" value="true"/>
+  </target>
+
+  <target name="clean-all"
+    depends="clean"
+    description="Cleanup build artifacts, including cache.">
+    <delete dir="${cache.dir}"/>
+    <delete dir="${gen.dir}"/>
+  </target>
+
+  <target name="prepare"
+    unless="prepare.done"
+    depends="clean"
+    description="Prepare for build">
+    <mkdir dir="${gen.dir}"/>
+    <mkdir dir="${gen.dir}/api"/>
+    <mkdir dir="${gen.dir}/coverage"/>
+    <mkdir dir="${gen.dir}/logs"/>
+    <mkdir dir="${gen.dir}/logs/coverage"/>
+    <mkdir dir="${gen.dir}/pdepend"/>
+    <mkdir dir="${gen.dir}/phpdox"/>
+    <mkdir dir="${tmp.dir}"/>
+    <mkdir dir="${tmp.dir}/cov"/>
+    <mkdir dir="${cache.dir}"/>
+    <exec executable="composer">
+      <arg value="install"/>
+    </exec>
+    <property name="prepare.done" value="true"/>
+  </target>
+
+  <target name="lint"
+    depends="prepare"
+    description="Perform syntax check of sourcecode files">
+    <property name="lint.cache" value="${cache.dir}/lint.properties" />
+    <apply executable="php" failonerror="true">
+      <arg value="-l" />
+      <fileset dir="${basedir}">
+        <include name="model/**/*.php" />
+        <include name="tests/**/*.php" />
+        <modified>
+          <param name="cache.cachefile" value="${lint.cache}"/>
+        </modified>
+      </fileset>
+    </apply>
+  </target>
+
+  <target name="phpcs"
+    depends="prepare"
+    description="Find coding standard violations using PHP_CodeSniffer and print human readable output. Intended for usage on the command line before committing.">
+
+    <apply executable="${tools.dir}/phpcs" failonerror="true">
+      <arg value="--standard=${basedir}/build/phpcs.xml" />
+      <arg value="--extensions=php" />
+      <arg value="--report-width=120" />
+      <arg value="--report-full" />
+      <arg value="--report-gitblame" />
+      <arg path="${basedir}/src" />
+      <arg path="${basedir}/tests" />
+
+      <fileset includesfile="${build.dir}/lint.inc"
+        dir="${basedir}"
+        />
+    </apply>
+
+  </target>
+
+  <target name="phpdoc"
+      description="Perform php documentation creation">
+    <exec executable="${tools.dir}/phpdoc">
+      <arg value="-d" />
+      <arg path="${basedir}/src" />
+      <arg value="-t" />
+      <arg path="${gen.dir}/api" />
+    </exec>
+  </target>
+
+  <target name="phpmd"
+    description="Perform project mess detection using PHPMD and print human readable output. Intended for usage on the command line before committing.">
+    <exec executable="${tools.dir}/phpmd">
+      <arg path="${basedir}/src" />
+      <arg value="text" />
+      <arg path="${basedir}/build/phpmd.xml" />
+    </exec>
+  </target>
+
+  <target name="phpmd-ci"
+    depends="prepare"
+    description="Perform project mess detection using PHPMD and log result in XML format. Intended for usage within a continuous integration environment.">
+    <exec executable="${tools.dir}/phpmd">
+      <arg path="${basedir}/src" />
+      <arg value="xml" />
+      <arg path="${basedir}/build/phpmd.xml" />
+      <arg value="--reportfile" />
+      <arg path="${gen.dir}/logs/pmd.xml" />
+    </exec>
+  </target>
+
+  <target name="phploc"
+    description="Measure project size using PHPLOC and print human readable output. Intended for usage on the command line.">
+    <exec executable="${tools.dir}/phploc">
+      <arg value="--count-tests" />
+      <arg path="${basedir}/src/HRQLS" />
+      <arg path="${basedir}/src/HDS" />
+      <arg path="${basedir}/tests" />
+    </exec>
+  </target>
+
+  <target name="phpunit"
+    description="Run unit tests with PHPUnit"
+    >
+    <exec executable="php" failonerror="true">
+      <arg line="${PHPARGS} ${tools.dir}/phpunit"/>
+      <arg value="--configuration"/>
+      <arg path="${basedir}/build/phpunit.xml"/>
+      <arg value="--coverage-php"/>
+      <arg path="${tmp.dir}/cov/coverage-web-unit.cov"/>
+    </exec>
+
+  </target>
+
+  <target name="pdepend"
+    depends="prepare"
+    description="Calculate software metrics using PHP_Depend and log result in XML format. Intended for usage within a continuous integration environment.">
+    <exec executable="${tools.dir}/pdepend">
+      <arg value="--jdepend-xml=${gen.dir}/logs/jdepend.xml" />
+      <arg value="--jdepend-chart=${gen.dir}/pdepend/dependencies.svg" />
+      <arg value="--overview-pyramid=${gen.dir}/pdepend/overview-pyramid.svg" />
+      <arg path="${basedir}/src" />
+    </exec>
+  </target>
+
+  <target name="phpcpd"
+    description="Find duplicate code using PHPCPD and print human readable output. Intended for usage on the command line before committing.">
+    <exec executable="${tools.dir}/phpcpd">
+      <arg path="${basedir}/src" />
+    </exec>
+  </target>
+
+  <target name="phpcpd-ci"
+    depends="prepare"
+    description="Find duplicate code using PHPCPD and log result in XML format. Intended for usage within a continuous integration environment.">
+    <exec executable="${tools.dir}/phpcpd">
+      <arg value="--log-pmd" />
+      <arg path="${gen.dir}/logs/pmd-cpd.xml" />
+      <arg path="${basedir}/src" />
+    </exec>
+  </target>
+
+</project>

@@ -1,0 +1,57 @@
+<?xml version="1.0"?>
+<ruleset name="HRQLS">
+
+  <!--
+    An annotated example of a ruleset.xml file can be found here
+    https://github.com/squizlabs/PHP_CodeSniffer/wiki/Annotated-ruleset.xml
+  -->
+
+  <description>
+    The custom code standard for HRQLS, based on PSR-2.
+  </description>
+
+  <!--
+    At a minimum, use PSR-2 standards
+  -->
+  <rule ref="PSR2">
+    <exclude name="PSR1.Classes.ClassDeclaration.MissingNamespace" />
+    <exclude name="PSR1.Methods.CamelCapsMethodName.NotCamelCaps" />
+    <exclude name="Squiz.Classes.ValidClassName.NotCamelCaps" />
+    <exclude name="Squiz.NamingConventions.ValidVariableName.NotCamelCaps" />
+    <exclude name="Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps" />
+    <exclude name="Squiz.NamingConventions.ValidFunctionName.ScopeNotCamelCaps" />
+  </rule>
+
+  <!--
+    Additional rules to address docblock standards
+  -->
+  <rule ref="Squiz.Commenting.BlockComment" />
+  <rule ref="Squiz.Commenting.ClassComment" />
+  <rule ref="Squiz.Commenting.DocCommentAlignment" />
+  <rule ref="Squiz.Commenting.EmptyCatchComment" />
+  <rule ref="Squiz.Commenting.FileComment">
+    <exclude name="Squiz.Commenting.FileComment.MissingSubpackageTag" />
+    <exclude name="Squiz.Commenting.FileComment.MissingAuthorTag" />
+    <exclude name="Squiz.Commenting.FileComment.IncorrectAuthor" />
+    <exclude name="Squiz.Commenting.FileComment.MissingCopyrightTag" />
+    <exclude name="Squiz.Commenting.FileComment.IncorrectCopyright" />
+    <exclude name="Squiz.Commenting.FileComment.SpacingAfterComment" />
+  </rule>
+  <rule ref="Squiz.Commenting.FunctionComment" />
+  <rule ref="Squiz.Commenting.FunctionCommentThrowTag" />
+  <rule ref="Squiz.Commenting.PostStatementComment" />
+  <rule ref="Squiz.Commenting.VariableComment" />
+  <rule ref="Squiz.NamingConventions">
+    <exclude name="Squiz.NamingConventions.ValidVariableName.PrivateNoUnderscore" />
+    <exclude name="Squiz.NamingConventions.ValidFunctionName.PrivateNoUnderscore" />
+    <exclude name="Squiz.NamingConventions.ConstantCase.Found" />
+  </rule>
+
+  <!--
+    Allows for adding groups to test classes.
+  -->
+  <rule ref="Squiz.Commenting.ClassComment.TagNotAllowed">
+    <exclude-pattern>/tests/*</exclude-pattern>
+  </rule>
+
+</ruleset>
