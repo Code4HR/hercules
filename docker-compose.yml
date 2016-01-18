@@ -4,31 +4,38 @@
 #
 
 elasticsearch:
-  build: hercules-es
-  #image: elasticsearch:2.1
+  image: elasticsearch:2.1
+  container_name: es-hercules # warning this only allows one container per service
+  volumes:
+    # lets name this volume for easier identification
+    - es-hercules:/usr/share/elasticsearch/data
 hercules:
-  build: .
+  build: hercules
+  container_name: hercules # warning this only allows one container per service
   # this will be available from your host OS on 8081
   ports: 
     - "8082:80"
-  expose:
-    - "80"
+  #expose:
+    #- "80"
   links:
     - elasticsearch
 explore:
+  container_name: explore # warning this only allows one container per service
   #be sure explore is cloned and at same level as hercules
-  build: ../explore
+  build: explore
   # this will be available from your host OS on 8080
   ports: 
     - "8081:80"
-  expose:
-    - "80"
+  #expose:
+    #- "80"
   links:
     - hercules
-nginx:
-  build: hercules-nginx
-  ports:
-    - "8080:8080"
-  links:
-    - hercules
-    - explore
+#nginx:
+    #image: jwilder/nginx-proxy
+  #ports:
+    #- "80:80"
+  #volumes:
+    #- /var/run/docker.sock:/tmp/docker.sock:ro
+  #links:
+    #- hercules
+    #- explore
