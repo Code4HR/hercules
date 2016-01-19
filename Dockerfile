@@ -1,29 +1,4 @@
-FROM php:5.5-apache
-
-RUN \
-  apt-get update && \
-  DEBIAN_FRONTEND=noninteractive apt-get install -y \
-  ant \
-  build-essential \
-  sudo \
-  make \
-  net-tools \
-  amavisd-new \
-  libcurl4-gnutls-dev \
-  && rm -r /var/lib/apt/lists/*
-
-# PHP Extensions
-RUN docker-php-ext-install mcrypt zip bz2 mbstring \
-  && docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
-  && docker-php-ext-install gd
-
-# Memory Limit
-RUN echo "memory_limit=1024M" > $PHP_INI_DIR/conf.d/memory-limit.ini
-
-#install composer
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin/ --filename=composer
-
-WORKDIR /var/www/html
+FROM code4hr/hercules-dockerfile-base
 
 # Copy composer files into the app directory.
 COPY composer.json composer.lock ./
@@ -38,6 +13,8 @@ COPY apache.conf /etc/apache2/sites-available/
 RUN a2ensite apache
 RUN a2enmod rewrite
 COPY . /var/www/html
+
+ENV ELASTICSEARCH_HOSTNAME_PORT hercules.code4hr.org:33366
 
 EXPOSE 80
 CMD ["apache2-foreground"]
