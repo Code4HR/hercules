@@ -1,9 +1,16 @@
 <?php
-
+/**
+ * Main Controller Test file
+ *
+ * @package tests/HRQLS/Controllers
+ */
 use Silex\Application;
 use Symfony\Component\HttpFoundation\Request;
 use HRQLS\Controllers\Main;
 
+/**
+ * Defines Unit Tests for Main Controller
+ */
 class MainTest extends PHPUnit_Framework_TestCase
 {
     /**

@@ -1,14 +1,27 @@
 <?php
-
+/**
+ * Test file for ElasticSearch Service Provider
+ *
+ * @package tests/HRQLS/Models
+ */
 use Silex\Application;
 use HRQLS\Models\ElasticSearchServiceProvider;
 use Elasticsearch\Client;
 use Elasticsearch\ClientBuilder;
 
+/**
+ * Defines ElasticSearch Service Provider Unit Tests
+ */
 class ElasticSearchProviderTest extends PHPUnit_Framework_TestCase
 {
     /**
      * Provides mock objects for tests.
+     *
+     * @return array Like [
+     *     ES Client Builder Mock,
+     *     SilexApp Mock,
+     *     ES Client Mock,
+     * ]
      */
     public function getMockObjects()
     {
@@ -38,6 +51,8 @@ class ElasticSearchProviderTest extends PHPUnit_Framework_TestCase
 
     /**
      * Tests that the constructor properly calls the Elasticsearch Client Builder.
+     *
+     * @return void
      */
     public function testConstructor()
     {
@@ -61,6 +76,8 @@ class ElasticSearchProviderTest extends PHPUnit_Framework_TestCase
 
     /**
      * Tests that search requests are properly handled by the service provider.
+     *
+     * @return void
      */
     public function testSearch()
     {
