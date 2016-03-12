@@ -13,7 +13,13 @@
       },
       {
         "url": "/crime",
-        "controller": "HRQLS\\Controllers\\Crime::main"
+        "controller": "HRQLS\\Controllers\\Crime::main",
+        "description": "Index crime endpoints available"
+      },
+      {
+        "url": "/crime/",
+        "controller": "HRQLS\\Controllers\\Crime::getAll",
+        "description": "Index all crimes from all cities"
       },
       {
         "url": "/food/sanitation",

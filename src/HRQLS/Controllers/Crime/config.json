@@ -1,0 +1,15 @@
+{
+  "routes":
+  {
+    "get": [
+      {
+        "url": "/Hampton",
+        "controller": "HRQLS\\Controlelrs\\Hampton::main",
+        "city": "Hampton",
+        "description": "API Endpoint for Hampton City Crime Data",
+        "dataSource": "Sorata Crime API for Hampton Ctiy",
+        "authentication": "none"
+      }
+    ]
+  }
+}
