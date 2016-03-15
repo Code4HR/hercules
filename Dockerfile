@@ -14,6 +14,8 @@ RUN a2ensite apache
 RUN a2enmod rewrite
 COPY . /var/www/html
 
+# you can replace this at runtime for dev/test
+# otherwise it defaults to prod ES
 ENV ELASTICSEARCH_HOSTNAME_PORT hercules.code4hr.org:33366
 
 EXPOSE 80
