@@ -9,11 +9,14 @@ COPY composer.json composer.lock ./
 RUN composer install --prefer-source --no-interaction
 
 # copy in source files
+RUN echo "date.timezone = 'America/New_York'" >> /usr/local/etc/php/php.ini
 COPY apache.conf /etc/apache2/sites-available/
 RUN a2ensite apache
 RUN a2enmod rewrite
 COPY . /var/www/html
 
+# you can replace this at runtime for dev/test
+# otherwise it defaults to prod ES
 ENV ELASTICSEARCH_HOSTNAME_PORT hercules.code4hr.org:33366
 
 EXPOSE 80
