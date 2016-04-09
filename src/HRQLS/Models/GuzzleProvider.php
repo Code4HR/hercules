@@ -1,9 +1,12 @@
 <?php
 /**
- * Provider for Guzzle HttP Client
+ * Provider for Guzzle Http Client
  *
  * @package HRQLS\Models
  */
+ 
+namespace HRQLS\Models;
+ 
 use GuzzleHttp\Client;
 
 /**
@@ -16,25 +19,15 @@ final class GuzzleProvider
      *
      * @var Guzzle Client
      */
-    private $client;
+    private $guzzle;
 
      /**
       * Registers a Guzzle client with Silex App
       *
-      * @param Client $guzzleClient A GuzzleHttp\Client object.
+      * @param GuzzleHttp\Client $guzzleClient A GuzzleHttp\Client object.
       */
     public function __construct(Client $guzzleClient)
     {
-        $this->app = $client;
-    }
-
-    /**
-     * gets the GuzzleHttp\Client object
-     *
-     * @return Client
-     */
-    public function getClient()
-    {
-        return $this->client;
+        $this->guzzle = $guzzleClient;
     }
 }
