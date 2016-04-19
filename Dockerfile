@@ -19,5 +19,8 @@ COPY . /var/www/html
 # otherwise it defaults to prod ES
 ENV ELASTICSEARCH_HOSTNAME_PORT hercules.code4hr.org:33366
 
+# need to fill this with proper key at runtime
+ENV GREATSCHOOLS_API_KEY examplekey
+
 EXPOSE 80
 CMD ["apache2-foreground"]
