@@ -97,8 +97,44 @@ class ElasticSearchProviderTest extends PHPUnit_Framework_TestCase
             ->method('search')
             ->with(['test query']);
 
-        $result = $esServiceProvider->search(['test query']);
+        $result = $esServiceProvider->search(['test query'], [], []);
 
         $this->assertEquals('test', $result);
+    }
+    
+    /**
+     * Creates a mock ES search response array from the passed in data array.
+     *
+     * @param array $data Array of data injected into search return array.
+     *
+     * @return array Like [
+     *    'took' => (Integer),
+     *    'timed_out' => [
+     *      '_shards' => [
+     *        'total' => (Integer),
+     *        'successful' => (Integer),
+     *        'failed' => (Integer),
+     *      ],
+     *    ],
+     *    'hits' => [
+     *      'total' => (integer),
+     *      'max_score' => (double)
+     *      'hits' => $data
+     *    ],
+     *  ];
+     */
+    public function getSearchReturnArray(array $data)
+    {
+        return [
+         'took' => 1337,
+         'timed_out' => [
+           '_shards' => [
+             'total' => 2,
+             'successful' => 1,
+             'failed' => 1,
+           ],
+         ],
+         'hits' => $data,
+        ];
     }
 }
