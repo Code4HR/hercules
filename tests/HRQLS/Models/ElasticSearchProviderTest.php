@@ -14,6 +14,13 @@ use Elasticsearch\ClientBuilder;
  */
 class ElasticSearchProviderTest extends PHPUnit_Framework_TestCase
 {
+    
+    const MOCK_SEARCH_HITS = [
+        'total' => 0,
+        'max_score' => 0,
+        'hits' => [],
+    ];
+    
     /**
      * Provides mock objects for tests.
      *
@@ -75,31 +82,47 @@ class ElasticSearchProviderTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * Tests that search requests are properly handled by the service provider.
+     * Verifies that search functionality is exposed by the service provider.
      *
      * @return void
      */
     public function testSearch()
     {
-        $mocks = $this->getMockObjects();
-        $appMock = $mocks['1'];
-        $esClientBuilderMock = $mocks['0'];
-        $esClientMock = $mocks['2'];
+        //Get the mock objects.
+        list($esClientBuilderMock, $appMock, $esClientMock) = $this->getMockObjects();
 
+        //Create a the expected results array for search.
+        $expected = static::getSearchReturnArray(self::MOCK_SEARCH_HITS);
+        
+        // Set the ESClientMock's return value for the search method to $expected.
+        // I'm still fuzzy on the differences between will and willReturn so I used willReturn for readability.
         $esClientMock->method('search')
-            ->willReturn('test');
+            ->willReturn($expected);
 
+        //Sets the elasticSearch URL to use for testing. Since this is a UNti Test we set it to a nonsensical value.
         $appMock['elasticsearch.url'] = 'Test';
+        //Creates a new ElasticSearchServiceProvider from the ES Builder Mock.
         $esServiceProvider = new ElasticSearchServiceProvider($esClientBuilderMock);
+        //Ensures the ES Client being used is our Mock Client.
         $esServiceProvider->setClient($esClientMock);
 
-        $esClientMock->expects($this->once())
-            ->method('search')
-            ->with(['test query']);
+        //Query all documents under testIndex/testType.
+        $result = $esServiceProvider->search(['testIndex'], ['testType'], []);
 
-        $result = $esServiceProvider->search(['test query'], [], []);
-
-        $this->assertEquals('test', $result);
+        $this->assertEquals($expected, $result);
+    }
+    
+    /**
+     * Verifies that functionality to insert a document is exposed by the service provider.
+     *
+     * @return void
+     */
+    public function testInsert()
+    {
+        //Get the mock objects
+        list($esClientBuilderMock, $appMock, $esClientMock) = $this->getMockObjects();
+        
+        
     }
     
     /**
