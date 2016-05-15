@@ -242,14 +242,30 @@ class ElasticSearchServiceProvider implements ServiceProviderInterface
     /**
      * Returns all of the mappings for the specified indices, and types.
      *
-     * @param array $indices The indices to get mappings from.
-     * @param array $types   The types to get mappings for.
+     * @param array $indices The indices to get mappings from. Defaults to all indices.
+     * @param array $types   The types to get mappings for. Defaults to all types.
      *
-     * @return array The mappings for the specified indice and type.
+     * @return array like [
+     *    'indexName' => [
+     *      'mappings' => [
+     *        'typeName' => [
+     *          'properties' => [
+     *            'fieldName' => [
+     *              'type' => (string)..
+     *            ],
+     *          ],
+     *        ],
+     *      ],
+     *    ]...
+     * ];
      */
-    public function getMappings(array $indices, array $types)
+    public function getMappings(array $indices = [], array $types = [])
     {
-        //The mapping and all inherited mappings.
-        return '';
+        //If no indices or types are specified return mappings for all indices and types.
+        if (empty($indices) && empty($types)) {
+            return $this->client()->indices()->getMapping();
+        }
+        
+        return $this->client->indices()->getMapping(['index' => $indices, 'type' => $types]);
     }
 }

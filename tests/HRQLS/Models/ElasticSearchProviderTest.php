@@ -41,14 +41,21 @@ class ElasticSearchProviderTest extends PHPUnit_Framework_TestCase
         $appMock = $this->getMockBuilder('Silex\Application')
             ->setMethods(['register'])
             ->getMock();
+            
+        $esIndicesMock = $this->getMockBuilder('Elasticsearch\Namespaces\IndicesNamespace')
+            ->disableOriginalConstructor()
+            ->setMethods(['getMapping'])
+            ->getMock();
 
         $esClientMock = $this->getMockBuilder('ElasticSearch\Client')
             ->disableOriginalConstructor()
-            ->setMethods(['search', 'index', 'create', 'putMapping'])
+            ->setMethods(['search', 'index', 'create', 'putMapping', 'indices'])
             ->getMock();
 
         $esClientBuilderMock->method('build')
             ->willReturn($esClientMock);
+            
+        $esClientMock->method('indices')->willReturn($esIndicesMock);
 
         return [
                 $esClientBuilderMock,
@@ -339,6 +346,61 @@ class ElasticSearchProviderTest extends PHPUnit_Framework_TestCase
     }
     
     /**
+     * Verifies getMapping functionality is exposed by Service Provider.
+     *
+     * @return void
+     */
+    public function testGetMapping()
+    {
+        list($esClientBuilderMock, $appMock, $esClientMock) = $this->getMockObjects();
+        
+        $expected = [
+            'testIndex' => [
+                'mappings' => static::buildMappingArray('testType', ['testField' => ['type' => 'string']])
+            ]
+        ];
+
+        //set the return value for esClientMock->indices()->getMapping()
+        $esClientMock->indices()->method('getMapping')->willReturn($expected);
+        
+        //attach the mocked esClient to the Service Provider.
+        $esServiceProvider = new ElasticSearchServiceProvider($esClientBuilderMock);
+        $esServiceProvider->setClient($esClientMock);
+        
+        $actual = $esServiceProvider->getMappings(['testIndex'], ['testType']);
+        $this->AssertEquals($expected, $actual);
+    }
+    
+    /**
+     * Verfies behaviour when no indices or types are specified.
+     *
+     * @return void
+     */
+    public function testGetMapping_AllMappings()
+    {
+        list($esClientBuilderMock, $appMock, $esClientMock) = $this->getMockObjects();
+        
+        $expected = [
+            'testIndex' => [
+                'mappings' => static::buildMappingArray('testType', ['testField' => ['type' => 'string']])
+            ],
+            'testIndex2' => [
+                'mappings' => static::buildMappingArray('testType2', ['testKeyField' => ['type' => 'int']])
+            ],
+        ];
+        
+        //set the return value for esClientMock->indices()->getMapping()
+        $esClientMock->indices()->method('getMapping')->willReturn($expected);
+        
+        //attach the mocked esClient to the Service Provider.
+        $esServiceProvider = new ElasticSearchServiceProvider($esClientBuilderMock);
+        $esServiceProvider->setClient($esClientMock);
+        
+        $actual = $esServiceProvider->getMappings(['testIndex'], ['testType']);
+        $this->AssertEquals($expected, $actual);
+    }
+    
+    /**
      * Creates a mock ES search response array from the passed in data array.
      *
      * @param array $data Array of data injected into search return array.
@@ -410,5 +472,25 @@ class ElasticSearchProviderTest extends PHPUnit_Framework_TestCase
             '_version' => $ver,
             'created' => $created
         ];
+    }
+    
+    /**
+     * Builds a Mapping Array from the specified type and properties array.
+     *
+     * @param string $type       The Name of the type this mapping applies to.
+     * @param array  $properties Array containing field names, types etc. for ES Mapping.
+     *
+     * @return array Like [
+     *    'typeName' => [
+     *      'properties' => [
+     *        'fieldName' => ['type' => string, ...]
+     *        ...
+     *      ],
+     *    ]
+     *  ];
+     */
+    public function buildMappingArray($type, array $properties)
+    {
+        return [$type => ['properties' => $properties]];
     }
 }
