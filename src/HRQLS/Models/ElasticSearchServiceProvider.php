@@ -12,6 +12,7 @@ use Silex\ServiceProviderInterface;
 use Elasticsearch\Client;
 use Elasticsearch\ClientBuilder;
 use HRQLS\Exceptions\UsageException;
+use HRQLS\Exceptions\ProtectedIndexException;
 
 /**
  * This is the class that handles registering and exposing functionality to Silex for ElasticSearch.
@@ -185,8 +186,9 @@ class ElasticSearchServiceProvider implements ServiceProviderInterface
      * @param string $name    The name of the mapping/type you are creating.
      * @param array  $mapping An array of mapping properties that define the mapping/type.
      *
-     * @return boolean True on success otherwise false.
+     * @return array like ['acknowledged' => (Boolean)];
      *
+     * @throws ProtectedIndexException When $index starts with 'hercules-'.
      * @throws UsageException When $index, $name, or $mapping are empty/null.
      */
     public function addMapping($index, $name, array $mapping)
@@ -194,20 +196,34 @@ class ElasticSearchServiceProvider implements ServiceProviderInterface
         $errorMessages = [];
         
         if (empty($index)) {
-            $errorMessages[] = 'The index that mappings will be added to must be specified. $index cannot = null';
+            throw new UsageException('$index cannot be null.');
         }
         
         //Block mappings from being added to any hercules-* index new or existing.
-        
-        $response = $this->client->create($index);
-        //Check for error. and throw exception accordingly.
+        if (preg_match('/^(hercules-)/', $index, $matches)) {
+            throw new ProtectedIndexException("Mappings cannot be added to protected {$matches}* Indices.");
+        }
+       
+        //Attempt to create the index. If the index already exists an indexAlreadyExists Exception is thrown
+        try {
+            $response = $this->client->create($index);
+            if ($response['acknowledged'] != true) {
+                $errorMessages[] = "The request to create {$index} was not acknowledged.";
+            }
+        } catch (\Exception $e) {
+            //Report error message only if it was not an error stating the index already existed.
+            //@TODO It would be better to do this test by type but i'm not sure how to do that in PHP.
+            if (strpos($e->getMessage(), "[{$index}] already exists") === false) {
+                $errorMessages[] = "Failed to create {$index} with error {$e->getMessage()}.";
+            }
+        }
         
         if (empty($name)) {
-            $errorMessages[] = 'A mapping must be assigned a name. $name cannot = null.';
+            $errorMessages[] = '$name cannot = null.';
         }
         
         if (empty($mapping)) {
-            $errorMessages[] = "$mapping cannot be empty. That doesn't make any sense.";
+            $errorMessages[] = "An empty mapping cannot be created. That doesn't make any sense.";
         }
         
         if (!empty($errorMessages)) {

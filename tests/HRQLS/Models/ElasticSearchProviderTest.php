@@ -44,7 +44,7 @@ class ElasticSearchProviderTest extends PHPUnit_Framework_TestCase
 
         $esClientMock = $this->getMockBuilder('ElasticSearch\Client')
             ->disableOriginalConstructor()
-            ->setMethods(['search', 'index'])
+            ->setMethods(['search', 'index', 'create', 'putMapping'])
             ->getMock();
 
         $esClientBuilderMock->method('build')
@@ -211,6 +211,128 @@ class ElasticSearchProviderTest extends PHPUnit_Framework_TestCase
         
         //Attempt to insert without providing an index, type or document...srsly though who would do this?
         $esServiceProvider->insert('', '', []);
+    }
+    
+    /**
+     * Verifies addMapping functionality is exposed by the Service Provider.
+     * NOTE this also tests the behaviour when adding a mapping to a new index.
+     *
+     * @return void
+     */
+    public function testAddMapping()
+    {
+        $expected = ['acknowledged' => true];
+        //Get the mock objects.
+        list($esClientBuilderMock, $appMock, $esClientMock) = $this->getMockObjects();
+        
+        //Set the return values for esClient methods that are called in service provider.
+        $esClientMock->method('create')->willReturn($expected);
+        $esClientMock->method('putMapping')->willReturn($expected);
+        
+        //attach the mocked esClient to the Service Provider.
+        $esServiceProvider = new ElasticSearchServiceProvider($esClientBuilderMock);
+        $esServiceProvider->setClient($esClientMock);
+        
+        $actual = $esServiceProvider->addMapping('testIndex', 'testType', ['key' => 'value']);
+        
+        $this->AssertEquals($expected, $actual);
+    }
+    
+    /**
+     * Verifies behaviour when no index is specified.
+     *
+     * @return void
+     *
+     * @expectedException \HRQLS\Exceptions\UsageException
+     * @expectedExceptionMessage $index cannot be null.
+     */
+    public function testAddMapping_noIndex()
+    {
+        $expected = ['acknowledged' => true];
+        //Get the mock objects.
+        list($esClientBuilderMock, $appMock, $esClientMock) = $this->getMockObjects();
+        
+        //attach the mocked esClient to the Service Provider.
+        $esServiceProvider = new ElasticSearchServiceProvider($esClientBuilderMock);
+        $esServiceProvider->setClient($esClientMock);
+        
+        $actual = $esServiceProvider->addMapping('', 'testType', ['key' => 'value']);
+    }
+    
+    /**
+     * Verifies behaviour when adding a mapping to an exsting index.
+     *
+     * @return void
+     */
+    public function testAddMapping_indexAlreadyExists()
+    {
+        $indexName = 'testIndex';
+        $expected = ['acknowledged' => true];
+        //Get the mock objects.
+        list($esClientBuilderMock, $appMock, $esClientMock) = $this->getMockObjects();
+        
+        //Set the return values for esClient methods that are called in service provider.
+        $esClientMock->method('create')
+            ->will($this->throwException(new Exception("[{$indexName}] already exists")));
+        $esClientMock->method('putMapping')->willReturn($expected);
+        
+        //attach the mocked esClient to the Service Provider.
+        $esServiceProvider = new ElasticSearchServiceProvider($esClientBuilderMock);
+        $esServiceProvider->setClient($esClientMock);
+        
+        $actual = $esServiceProvider->addMapping($indexName, 'testType', ['key' => 'value']);
+        
+        $this->AssertEquals($expected, $actual);
+    }
+    
+    /**
+     * Verifies behaviour when adding a mapping without specifying a type.
+     *
+     * @return void
+     *
+     * @expectedException \HRQLS\Exceptions\UsageException
+     * @expectedExceptionMessage $name cannot = null.
+     */
+    public function testAddMapping_noType()
+    {
+        $expected = ['acknowledged' => true];
+        //Get the mock objects.
+        list($esClientBuilderMock, $appMock, $esClientMock) = $this->getMockObjects();
+        
+        //Set the return values for esClient methods that are called in service provider.
+        $esClientMock->method('create')->willReturn($expected);
+        $esClientMock->method('putMapping')->willReturn($expected);
+        
+        //attach the mocked esClient to the Service Provider.
+        $esServiceProvider = new ElasticSearchServiceProvider($esClientBuilderMock);
+        $esServiceProvider->setClient($esClientMock);
+        
+        $actual = $esServiceProvider->addMapping('testIndex', '', ['key' => 'value']);
+    }
+    
+    /**
+     * Verfies behaviour when no mapping is specified.
+     *
+     * @return void
+     *
+     * @expectedException \HRQLS\Exceptions\UsageException
+     * @expectedExceptionMessage An empty mapping cannot be created. That doesn't make any sense.
+     */
+    public function testAddMapping_noMapping()
+    {
+        $expected = ['acknowledged' => true];
+        //Get the mock objects.
+        list($esClientBuilderMock, $appMock, $esClientMock) = $this->getMockObjects();
+        
+        //Set the return values for esClient methods that are called in service provider.
+        $esClientMock->method('create')->willReturn($expected);
+        $esClientMock->method('putMapping')->willReturn($expected);
+        
+        //attach the mocked esClient to the Service Provider.
+        $esServiceProvider = new ElasticSearchServiceProvider($esClientBuilderMock);
+        $esServiceProvider->setClient($esClientMock);
+        
+        $actual = $esServiceProvider->addMapping('testIndex', 'testType', []);
     }
     
     /**
