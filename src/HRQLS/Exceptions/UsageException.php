@@ -5,12 +5,12 @@
  * @package HRQLS\Exceptions
  */
  
- namespace HRQLS\Exceptions;
+namespace HRQLS\Exceptions;
  
  /**
-  * Defines thecustom USageException class.
+  * Defines the custom UsageException class.
   */
-class UsageException extends Exception
+class UsageException extends \Exception
 {
     /**
      * Constructs a new UsageException object.
