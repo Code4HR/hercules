@@ -158,7 +158,7 @@ class ElasticSearchServiceProvider implements ServiceProviderInterface
         }
 
         if (empty($doc)) {
-            $errorMessages[] = "An empty document cannot be inserted. That doesn't any sense.";
+            $errorMessages[] = "An empty document cannot be inserted. That doesn't make any sense.";
         }
 
         if (!empty($errorMessages)) {

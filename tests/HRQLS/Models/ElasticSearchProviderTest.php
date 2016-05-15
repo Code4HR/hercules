@@ -8,6 +8,7 @@ use Silex\Application;
 use HRQLS\Models\ElasticSearchServiceProvider;
 use Elasticsearch\Client;
 use Elasticsearch\ClientBuilder;
+use HRQLS\Exceptions\UsageException;
 
 /**
  * Defines ElasticSearch Service Provider Unit Tests
@@ -134,6 +135,82 @@ class ElasticSearchProviderTest extends PHPUnit_Framework_TestCase
         $actual = $esServiceProvider->insert('testIndex', 'testType', ['key' => 'value'], $docId);
 
         $this->assertEquals($expected, $actual);
+    }
+    
+    /**
+     * Verifies behaviour when inserting a document without specifying an index.
+     *
+     * @return void
+     *
+     * @expectedException \HRQLS\Exceptions\UsageException
+     * @expectedExceptionMessage $index cannot be null.
+     */
+    public function testInsert_NoIndex()
+    {
+        //Get the mock objects
+        list($esClientBuilderMock, $appMock, $esClientMock) = $this->getMockObjects();
+            
+        $esServiceProvider = new ElasticSearchServiceProvider($esClientBuilderMock);
+        $esServiceProvider->setClient($esClientMock);
+        
+        $esServiceProvider->insert('', 'testType', ['key' => 'value']);
+    }
+    
+    /**
+     * Verifies behaviour when inserting a document without specifying a type.
+     *
+     * @return void
+     *
+     * @expectedException \HRQLS\Exceptions\UsageException
+     * @expectedExceptionMessage $type cannot be null.
+     */
+    public function testInsert_noType()
+    {
+        //Get the mock objects
+        list($esClientBuilderMock, $appMock, $esClientMock) = $this->getMockObjects();
+            
+        $esServiceProvider = new ElasticSearchServiceProvider($esClientBuilderMock);
+        $esServiceProvider->setClient($esClientMock);
+        
+        $esServiceProvider->insert('testIndex', '', ['key' => 'value']);
+    }
+    
+    /**
+     * Verifies behaviour when attempting to insert an empty document.
+     *
+     * @return void
+     *
+     * @expectedException \HRQLS\Exceptions\UsageException
+     * @expectedExceptionMessage An empty document cannot be inserted. That doesn't make any sense.
+     */
+    public function testInsert_emptyDocument()
+    {
+        //Get the mock objects
+        list($esClientBuilderMock, $appMock, $esClientMock) = $this->getMockObjects();
+        
+        $esServiceProvider = new ElasticSearchServiceProvider($esClientBuilderMock);
+        $esServiceProvider->setClient($esClientMock);
+        
+        $esServiceProvider->insert('testIndex', 'testType', []);
+    }
+    
+    /**
+     * Verifies all applicable error messages are reported in UsageException.
+     *
+     * @return void
+     *
+     * @expectedException \HRQLS\Exceptions\UsageException
+     */
+    public function testInsert_noParameters()
+    {
+        //Get the mock objects
+        list($esClientBuilderMock, $appMock, $esClientMock) = $this->getMockObjects();
+        
+        $esServiceProvider = new ElasticSearchServiceProvider($esClientBuilderMock);
+        $esServiceProvider->setClient($esClientMock);
+        
+        //Attempt to insert without providing an index, type or document...srsly though who would do this?
+        $esServiceProvider->insert('', '', []);
     }
     
     /**
