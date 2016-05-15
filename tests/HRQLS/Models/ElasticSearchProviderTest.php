@@ -267,6 +267,28 @@ class ElasticSearchProviderTest extends PHPUnit_Framework_TestCase
     }
     
     /**
+     * Verifies behaviour when attempting to create a new index and the request was not acknowledged.
+     *
+     * @return void
+     *
+     * @expectedException \HRQLS\Exceptions\UsageException
+     * @expectedExceptionMessage
+     * Failed to create testIndex with error The request to create testIndex was not acknowledged.
+     */
+    public function testAddMapping_indexWasNotCreated()
+    {
+        list($esClientBuilderMock, $appMock, $esClientMock) = $this->getMockObjects();
+        
+        //Set the return values for esClient methods that are called in service provider.
+        $esClientMock->method('create')->willReturn(['acknowledged' => false]);
+        
+        $esServiceProvider = new ElasticSearchServiceProvider($esClientBuilderMock);
+        $esServiceProvider->setClient($esClientMock);
+        
+        $actual = $esServiceProvider->addMapping('testIndex', 'testType', ['key' => 'value']);
+    }
+    
+    /**
      * Verifies behaviour when adding a mapping without specifying a type.
      *
      * @return void
