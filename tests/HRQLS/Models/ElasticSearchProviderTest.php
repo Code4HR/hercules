@@ -195,25 +195,6 @@ class ElasticSearchProviderTest extends PHPUnit_Framework_TestCase
     }
     
     /**
-     * Verifies all applicable error messages are reported in UsageException.
-     *
-     * @return void
-     *
-     * @expectedException \HRQLS\Exceptions\UsageException
-     */
-    public function testInsert_noParameters()
-    {
-        //Get the mock objects
-        list($esClientBuilderMock, $appMock, $esClientMock) = $this->getMockObjects();
-        
-        $esServiceProvider = new ElasticSearchServiceProvider($esClientBuilderMock);
-        $esServiceProvider->setClient($esClientMock);
-        
-        //Attempt to insert without providing an index, type or document...srsly though who would do this?
-        $esServiceProvider->insert('', '', []);
-    }
-    
-    /**
      * Verifies addMapping functionality is exposed by the Service Provider.
      * NOTE this also tests the behaviour when adding a mapping to a new index.
      *
