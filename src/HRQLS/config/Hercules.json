@@ -16,6 +16,10 @@
         "controller": "HRQLS\\Controllers\\Crime::main"
       },
       {
+          "url": "/crime/Hampton",
+          "controler": "HRQLS\\Controllers\\Crime\\Hampton::main"
+      },
+      {
         "url": "/food/sanitation",
         "controller": "HRQLS\\Controllers\\Food\\Sanitation::main"
       }
