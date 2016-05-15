@@ -11,6 +11,7 @@ use Silex\Application;
 use Silex\ServiceProviderInterface;
 use Elasticsearch\Client;
 use Elasticsearch\ClientBuilder;
+use HRQLS\Exceptions\UsageException;
 
 /**
  * This is the class that handles registering and exposing functionality to Silex for ElasticSearch.
@@ -126,20 +127,25 @@ class ElasticSearchServiceProvider implements ServiceProviderInterface
      *
      * @param string  $index The name of the index to insert the document.
      * @param string  $type  The type (a.k.a collection) to insert the document.
-     * @param string  $doc   The document to insert.
+     * @param array   $doc   The document to insert.
      * @param integer $id    The Id to assign the document being inserted. If null Id is auto-assigned (recommended).
      *
      * @return array Like [
-     *    '_index' => (string),
-     *    '_type' => (string),
-     *    '_id' => (string),
-     *    '_version' => (integer),
-     *    'created' => (integer),
+     *    '_shards' => [
+     *        'total' => (Integer),
+     *        'failed' => (Integer),
+     *        'successful' = > (Integer),
+     *    ],
+     *    '_index' => (String),
+     *    '_type' => (String),
+     *    '_id' => (String),
+     *    '_version' => (Integer),
+     *    'created' => (Boolean),
      *  ];
      *
      * @throws UsageException When $index, $type, or $doc is null.
      */
-    public function insert($index, $type, $doc, $id = null)
+    public function insert($index, $type, array $doc, $id = null)
     {
         $errorMessages = [];
         
@@ -150,15 +156,15 @@ class ElasticSearchServiceProvider implements ServiceProviderInterface
         if (empty($type)) {
             $errorMessages[] = '$type cannot be null.';
         }
-        
+
         if (empty($doc)) {
             $errorMessages[] = "An empty document cannot be inserted. That doesn't any sense.";
         }
-        
+
         if (!empty($errorMessages)) {
             throw new UsageException(implode("\n", $errorMessages));
         }
-        
+
         $req = [
             'index' => $index,
             'type' => $type,

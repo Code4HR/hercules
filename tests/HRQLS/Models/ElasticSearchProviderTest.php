@@ -43,7 +43,7 @@ class ElasticSearchProviderTest extends PHPUnit_Framework_TestCase
 
         $esClientMock = $this->getMockBuilder('ElasticSearch\Client')
             ->disableOriginalConstructor()
-            ->setMethods(['search'])
+            ->setMethods(['search', 'index'])
             ->getMock();
 
         $esClientBuilderMock->method('build')
@@ -99,17 +99,15 @@ class ElasticSearchProviderTest extends PHPUnit_Framework_TestCase
         $esClientMock->method('search')
             ->willReturn($expected);
 
-        //Sets the elasticSearch URL to use for testing. Since this is a UNti Test we set it to a nonsensical value.
-        $appMock['elasticsearch.url'] = 'Test';
         //Creates a new ElasticSearchServiceProvider from the ES Builder Mock.
         $esServiceProvider = new ElasticSearchServiceProvider($esClientBuilderMock);
         //Ensures the ES Client being used is our Mock Client.
         $esServiceProvider->setClient($esClientMock);
 
         //Query all documents under testIndex/testType.
-        $result = $esServiceProvider->search(['testIndex'], ['testType'], []);
+        $actual = $esServiceProvider->search(['testIndex'], ['testType'], []);
 
-        $this->assertEquals($expected, $result);
+        $this->assertEquals($expected, $actual);
     }
     
     /**
@@ -119,10 +117,23 @@ class ElasticSearchProviderTest extends PHPUnit_Framework_TestCase
      */
     public function testInsert()
     {
+        $docId = 1337;
+
         //Get the mock objects
         list($esClientBuilderMock, $appMock, $esClientMock) = $this->getMockObjects();
+
+        //Creates the expected response Array for the index request.
+        $expected = static::getIndexReturnArray('testIndex', 'testType', $docId, 1, true);
         
+        $esClientMock->method('index')
+            ->willReturn($expected);
         
+        $esServiceProvider = new ElasticSearchServiceProvider($esClientBuilderMock);
+        $esServiceProvider->setClient($esClientMock);
+        
+        $actual = $esServiceProvider->insert('testIndex', 'testType', ['key' => 'value'], $docId);
+
+        $this->assertEquals($expected, $actual);
     }
     
     /**
@@ -158,6 +169,44 @@ class ElasticSearchProviderTest extends PHPUnit_Framework_TestCase
            ],
          ],
          'hits' => $data,
+        ];
+    }
+    
+    /**
+     * Creates a mock ES Index response array from provided arguments.
+     *
+     * @param string  $index   The index in which the document was created under.
+     * @param string  $type    The type in which the document was created under.
+     * @param integer $id      The id assigned to the document.
+     * @param integer $ver     The version of this document.
+     * @param boolean $created A flag indicating if the document was indexed successfully or not.
+     *
+     * @return array like [
+     *    '_shards' => [
+     *        'total' => (Integer),
+     *        'failed' => (Integer),
+     *        'successful' => (Integer)
+     *    ],
+     *    '_index' => (string),
+     *    '_type' => (string),
+     *    '_id' => (Integer),
+     *    '_version' => (Intger),
+     *    'created' => (Boolean)
+     * ];
+     */
+    public function getIndexReturnArray($index, $type, $id, $ver, $created)
+    {
+        return [
+            '_shards' => [
+              'total' => 1,
+              'failed' => 0,
+              'successful' => 1
+            ],
+            '_index' => $index,
+            '_type' => $type,
+            '_id' => $id,
+            '_version' => $ver,
+            'created' => $created
         ];
     }
 }
