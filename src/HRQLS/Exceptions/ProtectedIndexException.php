@@ -8,7 +8,9 @@
 namespace HRQLS\Exceptions;
  
  /**
-  * Defines the custom UsageException class.
+  * Defines the custom ProtectedIndexException class.
+  * This exception should be thrown when a user tries to add a mapping or type to a protected ES index.
+  * Currently the only protected indices are those that have the prefix 'hercules-'.
   */
 class ProtectedIndexException extends \Exception
 {

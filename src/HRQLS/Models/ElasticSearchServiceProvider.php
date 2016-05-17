@@ -212,8 +212,8 @@ class ElasticSearchServiceProvider implements ServiceProviderInterface
             }
         } catch (\Exception $e) {
             //Report error message only if it was not an error stating the index already existed.
-            //@TODO It would be better to do this test by type but i'm not sure how to do that in PHP.
-            if (strpos($e->getMessage(), "[{$index}] already exists") === false) {
+            //IndexAlreadyExistsException is one of ES's custom exceptions.
+            if (get_class($e) === 'IndexAlreadyExistsException') {
                 $errorMessages[] = "Failed to create {$index} with error {$e->getMessage()}.";
             }
         }
