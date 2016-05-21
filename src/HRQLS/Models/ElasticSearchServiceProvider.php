@@ -56,6 +56,7 @@ class ElasticSearchServiceProvider implements ServiceProviderInterface
     {
         $this->elasticsearch->setHosts([$app['elasticsearch.url']]);
         $this->client = $this->elasticsearch->build();
+        $app['elasticsearch'] = $this;
     }
 
     /**
