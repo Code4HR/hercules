@@ -14,6 +14,11 @@ namespace HRQLS\Controllers\Crime;
 final class DataPoint
 {
     /**
+     *
+     */
+    const CATEGORIES = ['FELONY', 'MISDEMEANOR'];
+    
+    /**
      * @var string The offense that was reported.
      */
     private $offense;
@@ -47,7 +52,7 @@ final class DataPoint
      * Creates a new Crime DataPoint from the given parameters.
      *
      * @param string   $offense  The crime that was reported i.e. Burglary.
-     * @param string   $cat      The category of the crime i.e. Felony | Misdemeanor.
+     * @param string   $category The category of the crime i.e. Felony | Misdemeanor.
      * @param string   $class    The class of the crime i.e. 1-5 etc.
      * @param DateTime $date     The timestamp of when the crime was reported.
      * @param string   $city     The city in which the crime occured.
@@ -55,10 +60,14 @@ final class DataPoint
      *
      * @return void
      */
-    public function __construct($offense, $cat, $class, DateTime $date, $city, array $location)
+    public function __construct($offense, $category, $class, \DateTime $date, $city, array $location)
     {
+        if (!in_array(strtoupper($category), self::CATEGORIES)) {
+            throw new \InvalidArgumentException("{$category} is not a valid category. ");
+        }
+        
         $this->offense = $offense;
-        $this->category = $cat;
+        $this->category = strtoupper($category);
         $this->class = $class;
         $this->occured = $date->format('Y-m-d H:i:s');
         $this->city = $city;
