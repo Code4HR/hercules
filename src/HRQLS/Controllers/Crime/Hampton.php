@@ -4,12 +4,13 @@
  *
  * @package HRQLS/Controllers
  */
- 
+
 namespace HRQLS\Controllers\Crime;
 
 use Silex\Application;
 use HRQLS\Models\GuzzleServiceProvider;
 use HRQLS\Models\Controllers\Crime\DataPoint;
+use HRQLS\Models\HerculesResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use HRQLS\Models\ElasticSearchServiceProvider;
@@ -19,6 +20,20 @@ use HRQLS\Models\ElasticSearchServiceProvider;
  */
 final class Hampton
 {
+    /**
+     * List of indices to use to pull data for this endpoint.
+     *
+     * @var Array
+     */
+    private $indices = ['hercules-crime_v1'];
+
+    /**
+     * List of types to use to pull data for this endpoint.
+     *
+     * @var Array
+     */
+    private $types = ['crimes'];
+
     /**
      * Main entry point for City of Hampton Crime Endpoint.
      * Lists all of the crime DataPoints available for the City of Hampton.
@@ -41,9 +56,17 @@ final class Hampton
      */
     public function main(Request $req, Application $app)
     {
-        return [];
+        $response = new HerculesResponse();
+        $response->setEndpoint('/crime/Hampton');
+
+        $esResult = $app['elasticsearch']->search($this->indices, [], []);
+
+
+
+        return $app->json($esResult, $response->getStatusCode());
+        //return $app->json($response->to_json(), $response->getStatusCode());
     }
-    
+
     /**
      * Gets exactly one crime datapoint.
      *
@@ -57,7 +80,7 @@ final class Hampton
         //@TODO fix the return statement cause that's hella busted.
         return new DataPoint('', '', '', new DateTime(), '', []);
     }
-    
+
     /**
      * Refreshes the Hampton Crime Data stored in ES if $timestamp >= NextRefreshTimestamp for this endpoint.
      *
@@ -68,5 +91,10 @@ final class Hampton
      */
     private function refreshStaleData(Application $app, DateTime $timestamp)
     {
+    }
+
+    private function parseResults($results)
+    {
+        //
     }
 }
