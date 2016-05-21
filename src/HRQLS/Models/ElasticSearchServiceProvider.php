@@ -117,7 +117,7 @@ class ElasticSearchServiceProvider implements ServiceProviderInterface
         
         $req = [
             'index' => implode(',', $indices),
-            'types' => implode(',', $types),
+            'type' => implode(',', $types),
             'body' => $query,
         ];
         

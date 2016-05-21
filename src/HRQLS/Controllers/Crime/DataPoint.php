@@ -14,7 +14,7 @@ namespace HRQLS\Controllers\Crime;
 final class DataPoint
 {
     /**
-     *
+     * @var array List of valid crime categories.
      */
     const CATEGORIES = ['FELONY', 'MISDEMEANOR'];
     
