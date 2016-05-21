@@ -9,6 +9,8 @@ namespace HRQLS\Exceptions;
  
  /**
   * Defines the custom UsageException class.
+  * This exception should be thrown when a user tries to use a function incorrectly.
+  * An example of this is trying to index an empty document, cause that makes no sense...how would you search for it?
   */
 class UsageException extends \Exception
 {
