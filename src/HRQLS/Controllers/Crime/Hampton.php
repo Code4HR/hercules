@@ -63,7 +63,7 @@ final class Hampton
      * Refreshes the Hampton Crime Data stored in ES if $timestamp >= NextRefreshTimestamp for this endpoint.
      *
      * @param Application $app       Silex Application used to handle refreshing data.
-     * @param DateTime    $timestamp The timestamp of the current request.
+     * @param \DateTime   $timestamp The timestamp of the current request.
      *
      * @return void
      */
@@ -75,6 +75,10 @@ final class Hampton
             ]
         ];
         
-        $refreshTime = $app['elasticsearch']->search('crime', 'refresh-timestamps', $query);
+        $response = $app['elasticsearch']->search('crime', 'refresh-timestamps', $query);
+        
+        if ($timestamp >= $app['elasticsearch']->getResults($response)[0]['next_refresh_epoch']) {
+            continue;
+        }
     }
 }

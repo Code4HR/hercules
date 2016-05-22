@@ -269,4 +269,16 @@ class ElasticSearchServiceProvider implements ServiceProviderInterface
         
         return $this->client->indices()->getMapping(['index' => $indices, 'type' => $types]);
     }
+    
+    /**
+     * Gets the result set from an ElasticSearch Query Response.
+     *
+     * @param array $queryResponse A standard Elastic Search Query Response.
+     *
+     * @return array
+     */
+    public function getResults(array $queryResponse)
+    {
+        return $queryResponse['hits']['hits'];
+    }
 }

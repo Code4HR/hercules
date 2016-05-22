@@ -168,4 +168,79 @@ final class DataPoint
     {
         return $this->location;
     }
+    
+    
+        
+    /**
+     * Assigns a Category to the offense
+     *
+     * @return string
+     */
+    private static function assignCategory()
+    {
+        switch($this->offense) {
+            case 'BURGLARY/ B & E, COMMERCIAL':
+            case 'BURGLARY/ B & E, RESIDENTIAL':
+            case 'COUNTERFEITING/ FORGERY, ALL OTHERS':
+            case 'DESTRUCTION OF PROPERTY, PRIVATE PROPERTY':
+            case 'DESTRUCTION OF PROPERTY, CITY PROPERTY':
+            case 'DESTRUCTION OF PROPERTY, CITY - GRAFFITI':
+            case 'LARCENY':
+            case 'LARCENY,OF M.V. PARTS OR ACCESSORIES':
+            case 'LARCENY, ALL OTHERS':
+            case 'LARCENY, FROM MOTOR VEHICLE':
+            case 'LARCENY LOW PRI':
+            case 'LARCENY NORMAL':
+            case 'LARCENY, SHOPLIFTING':
+            case 'LARCENY, FROM BUILDING':
+            case 'LARCENY, POCKET PICKING':
+            case 'FRAUD, INNKEEPER':
+            case 'FRAUD, BY PRESCRIPTION':
+            case 'FRAUD LOW PRIOR':
+            case 'FRAUD, CREDIT CARD':
+            case 'FRAUD, USE FALSE NAME':
+            case 'FRAUD, ALL OTHERS':
+            case 'MAIMING':
+            case 'ROBBERY, BUSINESS':
+            case 'ROBBERY INDIVID':
+            case 'ROBBERY INDIV L':
+            case 'ROBBERY, PERSON':
+            case 'STOLEN VEH LOW':
+            case 'SHOOTING LOW PR':
+            case 'MOTOR VEHICLE THEFT - AUTOMOBILE':
+            case 'WEAPON LAW VIOLATIONS - ALL OTHERS':
+                return self::CATEGORIES[0];
+            case 'ATTEMPTED SUICIDE':
+            case 'ASSAULT':
+            case 'ASSAULT, SIMPLE':
+            case 'ASSAULT LOW PRI':
+            case 'DRUG/ NARCOTIC VIOLATIONS':
+            case 'EMBEZZLEMENT':
+            case 'FAMILY OFFENSE, NONVIOLET, ALL OTHERS':
+            case 'TRESPASS OF REAL PROPERTY':
+                return self::CATEGORIES[1];
+            case 'ALL OTHER REPORTABLE OFFENSES':
+                return self::CATEGORIES[2];
+            case 'FOUND PROPERTY':
+            case 'PROPERTY':
+            case 'LOST PROPERTY':
+            case 'SUSPICIOUS ACTIVITY':
+            case 'RECOVERED VEHICLE- STOLEN OTHER JURISDICTION':
+                return self::CATEGORIES[3];
+        }
+    }
+    
+    /**
+     * assigns a class to the current crime
+     *
+     * @return string
+     */
+    private static function assignClass()
+    {
+        switch ($this->offense)
+        {
+            case 'ASSAULT, SIMPLE':
+                return self::CLASSES['MISDEMEANOR'][5];
+        }
+    }
 }

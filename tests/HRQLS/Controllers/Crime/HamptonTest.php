@@ -7,6 +7,7 @@
 use HRQLS\Bootstrap;
 use Silex\Application;
 use HRQLS\Controllers\Crime\Hampton;
+use HRQLS\Controllers\Crime\DataPoint;
 use HRQLS\Models\GuzzleServiceProvider;
 use HRQLS\Models\ElasticSearchServiceProvider;
 
@@ -16,7 +17,7 @@ use HRQLS\Models\ElasticSearchServiceProvider;
 class HamptonTest extends PHPUnit_Framework_TestCase
 {
     /**
-     * Uses a reflection class to test the private refreshStaleData function to do a one time seed of the crime database.
+     * Just a comment.
      *
      * @test
      *
@@ -28,16 +29,15 @@ class HamptonTest extends PHPUnit_Framework_TestCase
         $app = new Silex\Application();
         $bootstrap = new Bootstrap($app);
         $bootstrap->loadConfig();
-        $bootstrap->connectDatabases();//For Elasticsearch.
-        $bootstrap->loadHttpClients();//For Guzzle.
+        //Get DB Service Providers
+        $bootstrap->connectDatabases();
+        //Get HTTP Service Providers.
+        $bootstrap->loadHttpClients();
         
-        $query = [
-            'query' => [
-                'match' => ['endpoint' => '/crime/Hampton']
-            ]
-        ];
+        $crimes = json_decode(file_get_contents('https://data.hampton.gov/resource/umc3-tsey.json'));
         
-        $refreshTime = $app['elasticsearch']->search(['crime'], ['refresh-timestamps'], $query);
-        var_dump($refreshTime);
+        foreach ($crimes as $crime) {
+            continue;
+        }
     }
 }
