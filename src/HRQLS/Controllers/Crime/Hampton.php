@@ -9,7 +9,7 @@ namespace HRQLS\Controllers\Crime;
 
 use Silex\Application;
 use HRQLS\Models\GuzzleServiceProvider;
-use HRQLS\Models\Controllers\Crime\DataPoint;
+use HRQLS\Controllers\Crime\DataPoint;
 use HRQLS\Models\HerculesResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -107,7 +107,17 @@ final class Hampton
         // Parse the results.
         $resultArray = $results['hits']['hits'];
         foreach ($resultArray as $key => $value) {
-            $response->addDataEntry($value);
+            $offense = $value['_source']['offense'];
+            $category = $value['_source']['category'];
+            $class = $value['_source']['class'];
+            $occured = new \DateTime($value['_source']['occured']);
+            $city = $value['_source']['city'];
+            $location = $value['_source']['location'];
+
+            if (isset($occured) && gettype($location) === 'array') {
+              $datapoint = new DataPoint($offense, $category, $class, $occured, $city, $location);
+              $response->addDataEntry($datapoint->toArray());
+            }
         }
 
         return $response;

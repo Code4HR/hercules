@@ -105,6 +105,18 @@ final class DataPoint
            'locaton' => $this->location,
         ]);
     }
+
+    public function toArray()
+    {
+      return [
+        'offense' => $this->offense,
+        'category' => $this->category,
+        'class' => $this->class,
+        'occurred' => $this->occured,
+        'city' => $this->city,
+        'location' => $this->location
+      ];
+    }
     
     /**
      * Gets this crimes offense.
