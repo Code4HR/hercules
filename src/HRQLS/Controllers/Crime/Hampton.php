@@ -7,6 +7,7 @@
  
 namespace HRQLS\Controllers\Crime;
 
+use HRQLS\Bootstrap;
 use Silex\Application;
 use HRQLS\Models\GuzzleServiceProvider;
 use HRQLS\Models\Controllers\Crime\DataPoint;
@@ -66,7 +67,14 @@ final class Hampton
      *
      * @return void
      */
-    private function refreshStaleData(Application $app, DateTime $timestamp)
+    private function refreshStaleData(Application $app, \DateTime $timestamp)
     {
+        $query = [
+            'query' => [
+                'match' => ['endpoint' => '/crime/Hampton']
+            ]
+        ];
+        
+        $refreshTime = $app['elasticsearch']->search('crime', 'refresh-timestamps', $query);
     }
 }
