@@ -27,9 +27,24 @@ class DataPointTest extends PHPUnit_Framework_TestCase
     }
     
     /**
+     * Verifies behaviour when an invalid Crime category is entered.
+     *
+     * @return void
+     *
+     * @expectedException InvalidArgumentException
+     */
+    public function testConstructor_invalidCategory()
+    {
+        new DataPoint('an offense', 'invalid', '1', new \DateTime(), 'Gotham', ['lat' => 0, 'lon' => 0]);
+    }
+    
+    /**
      * Verifies behaviour of DataPoint getters.
      *
      * @depends testConstructor
+     *
+     *
+     * @param DataPoint $data The DataPoint object to use in test.
      *
      * @return void
      */
@@ -48,6 +63,8 @@ class DataPointTest extends PHPUnit_Framework_TestCase
      * Verifies behavious of toJson function.
      *
      * @depends testConstructor
+     *
+     * @param DataPoint $data The DataPoint object to use in test.
      *
      * @return void
      */

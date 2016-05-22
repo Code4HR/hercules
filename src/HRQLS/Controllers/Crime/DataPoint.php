@@ -51,19 +51,24 @@ final class DataPoint
     /**
      * Creates a new Crime DataPoint from the given parameters.
      *
-     * @param string   $offense  The crime that was reported i.e. Burglary.
-     * @param string   $category The category of the crime i.e. Felony | Misdemeanor.
-     * @param string   $class    The class of the crime i.e. 1-5 etc.
-     * @param DateTime $date     The timestamp of when the crime was reported.
-     * @param string   $city     The city in which the crime occured.
-     * @param array    $location The lat/lon coordinates where the crime took place.
+     * @param string    $offense  The crime that was reported i.e. Burglary.
+     * @param string    $category The category of the crime i.e. Felony | Misdemeanor.
+     * @param string    $class    The class of the crime i.e. 1-5 etc.
+     * @param \DateTime $date     The timestamp of when the crime was reported.
+     * @param string    $city     The city in which the crime occured.
+     * @param array     $location The lat/lon coordinates where the crime took place.
      *
      * @return void
+     *
+     * @throws \InvalidArgumentException When $category is not 'FELONY' or 'MISDEMEANOR'.
      */
     public function __construct($offense, $category, $class, \DateTime $date, $city, array $location)
     {
         if (!in_array(strtoupper($category), self::CATEGORIES)) {
-            throw new \InvalidArgumentException("{$category} is not a valid category. ");
+            $validCategories = implode(' ', self::CATEGORIES);
+            throw new \InvalidArgumentException(
+                "Category must be {$validCategories}. {$category} is not a valid crime category."
+            );
         }
         
         $this->offense = $offense;
