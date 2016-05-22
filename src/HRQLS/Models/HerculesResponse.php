@@ -19,28 +19,28 @@ class HerculesResponse
      *
      * This defaults to 200 as a convienance.
      *
-     * @var Integer
+     * @var integer
      */
     private $statusCode = 200;
 
     /**
      * Holds the string for the endpoint portion of the response.
      *
-     * @var String
+     * @var string
      */
     private $endpoint = null;
 
     /**
      * The main dataset to be returned.
      *
-     * @var Array
+     * @var array
      */
     private $data = [];
 
     /**
      * Keeps track of any errors in the current response.
      *
-     * @var Array
+     * @var array
      */
     private $errors = [];
 
@@ -54,7 +54,9 @@ class HerculesResponse
     /**
      * Allows the setting of the endpoint name to return in the response.
      *
-     * @param String $endpoint The endpoint name.
+     * @param string $endpoint The endpoint name.
+     *
+     * @return void
      */
     public function setEndpoint($endpoint)
     {
@@ -66,7 +68,7 @@ class HerculesResponse
     /**
      * Validation function that checks that the necessary parts of the response have been set.
      *
-     * @return Boolean
+     * @return boolean
      */
     private function verifyResponse()
     {
@@ -80,7 +82,7 @@ class HerculesResponse
     /**
      * Allows access to the current status code.
      *
-     * @return String
+     * @return string
      */
     public function getStatusCode()
     {
@@ -90,11 +92,11 @@ class HerculesResponse
     /**
      * Allows the adding of single data entry to the data array of the response object.
      *
-     * @param Array $data The data to add to the response.
+     * @param array $data The data to add to the response.
      *
      * @return void
      */
-    public function addDataEntry($data)
+    public function addDataEntry(array $data)
     {
         array_push($this->data, $data);
     }
@@ -102,19 +104,21 @@ class HerculesResponse
     /**
      * Allows the registering of errors to the response object.
      *
-     * @param Array $error The error to add.
+     * @param array $error The error to add.
      *
      * @return void
      */
-    public function addError($error)
+    public function addError(array $error)
     {
         array_push($this->errors, $error);
     }
 
     /**
-     *  Retrieves the hercules formatted response.
+     * Retrieves the hercules formatted response.
      *
-     *  @return String The JSON response.
+     * @return string The JSON response.
+     *
+     * @throws \Exception If the current state of the response object fails validation.
      */
     public function to_json()
     {
@@ -128,7 +132,7 @@ class HerculesResponse
         ];
 
         if (sizeof($this->errors) > 0) {
-            $responseArray['errors'] = $this->errors; 
+            $responseArray['errors'] = $this->errors;
             $responseArray['data'] = [];
         } else {
             $responseArray['data'] = $this->data;

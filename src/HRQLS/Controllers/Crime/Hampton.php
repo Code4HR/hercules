@@ -23,14 +23,14 @@ final class Hampton
     /**
      * List of indices to use to pull data for this endpoint.
      *
-     * @var Array
+     * @var array
      */
     private $indices = ['hercules-crime_v1'];
 
     /**
      * List of types to use to pull data for this endpoint.
      *
-     * @var Array
+     * @var array
      */
     private $types = ['crimes'];
 
@@ -97,12 +97,12 @@ final class Hampton
     /**
      * Parse the results from Elasticsearch for the Hampton Crime data set.
      *
-     * @param Array            $results  The json data from the request.
+     * @param array            $results  The json data from the request.
      * @param HerculesResponse $response The response object to append data to.
      *
      * @return HerculesReponse The response object all pretty.
      */
-    private function parseResults($results, $response)
+    private function parseResults(array $results, HerculesResponse $response)
     {
         // Parse the results.
         $resultArray = $results['hits']['hits'];
