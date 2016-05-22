@@ -106,16 +106,21 @@ final class DataPoint
         ]);
     }
 
+    /**
+     * Returns the crime datapoint as an array.
+     *
+     * @return array
+     */
     public function toArray()
     {
-      return [
-        'offense' => $this->offense,
-        'category' => $this->category,
-        'class' => $this->class,
-        'occurred' => $this->occured,
-        'city' => $this->city,
-        'location' => $this->location
-      ];
+        return [
+            'offense' => $this->offense,
+            'category' => $this->category,
+            'class' => $this->class,
+            'occurred' => $this->occured,
+            'city' => $this->city,
+            'location' => $this->location
+        ];
     }
     
     /**

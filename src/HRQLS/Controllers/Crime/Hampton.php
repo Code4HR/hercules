@@ -114,8 +114,8 @@ final class Hampton
             $location = $value['_source']['location'];
 
             if (isset($occured) && gettype($location) === 'array') {
-              $datapoint = new DataPoint($offense, $category, $class, $occured, $city, $location);
-              $response->addDataEntry($datapoint->toArray());
+                $datapoint = new DataPoint($offense, $category, $class, $occured, $city, $location);
+                $response->addDataEntry($datapoint->toArray());
             }
         }
 
