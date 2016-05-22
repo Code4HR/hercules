@@ -65,7 +65,6 @@ final class Hampton
 
 
         return $app->json($response->to_json(), $response->getStatusCode());
-        //return $app->json($response->to_json(), $response->getStatusCode());
     }
 
     /**
