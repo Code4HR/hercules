@@ -123,8 +123,8 @@ class HerculesResponse
         }
 
         $responseArray = [
-          'endpoint' => $this->endpoint,
-          'datetime' => time()
+          endpoint => $this->endpoint,
+          datetime => time()
         ];
 
         if (sizeof($this->errors) > 0) {
@@ -135,6 +135,6 @@ class HerculesResponse
             $responseArray['errors'] = [];
         }
 
-        return json_encode($responseArray);
+        return $responseArray;
     }
 }

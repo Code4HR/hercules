@@ -61,9 +61,10 @@ final class Hampton
 
         $esResult = $app['elasticsearch']->search($this->indices, [], []);
 
+        $response = $this->parseResults($esResult, $response);
 
 
-        return $app->json($esResult, $response->getStatusCode());
+        return $app->json($response->to_json(), $response->getStatusCode());
         //return $app->json($response->to_json(), $response->getStatusCode());
     }
 
@@ -93,8 +94,22 @@ final class Hampton
     {
     }
 
-    private function parseResults($results)
+    /**
+     * Parse the results from Elasticsearch for the Hampton Crime data set.
+     *
+     * @param Array            $results  The json data from the request.
+     * @param HerculesResponse $response The response object to append data to.
+     *
+     * @return HerculesReponse The response object all pretty.
+     */
+    private function parseResults($results, $response)
     {
-        //
+        // Parse the results.
+        $resultArray = $results['hits']['hits'];
+        foreach ($resultArray as $key => $value) {
+            $response->addDataEntry($value);
+        }
+
+        return $response;
     }
 }
