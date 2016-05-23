@@ -4,6 +4,7 @@
  *
  * @package tests/HRQLS/Controllers
  */
+use Silex\Application;
 use HRQLS\Controllers\Crime\DataPoint;
 
 /**

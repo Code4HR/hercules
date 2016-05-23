@@ -4,13 +4,14 @@
  *
  * @package HRQLS/Controllers
  */
- 
+
 namespace HRQLS\Controllers\Crime;
 
 use HRQLS\Bootstrap;
 use Silex\Application;
 use HRQLS\Models\GuzzleServiceProvider;
-use HRQLS\Models\Controllers\Crime\DataPoint;
+use HRQLS\Controllers\Crime\DataPoint;
+use HRQLS\Models\HerculesResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use HRQLS\Models\ElasticSearchServiceProvider;
@@ -20,6 +21,20 @@ use HRQLS\Models\ElasticSearchServiceProvider;
  */
 final class Hampton
 {
+    /**
+     * List of indices to use to pull data for this endpoint.
+     *
+     * @var array
+     */
+    private $indices = ['hercules-crime_v1'];
+
+    /**
+     * List of types to use to pull data for this endpoint.
+     *
+     * @var array
+     */
+    private $types = ['crimes'];
+
     /**
      * Main entry point for City of Hampton Crime Endpoint.
      * Lists all of the crime DataPoints available for the City of Hampton.
@@ -42,9 +57,17 @@ final class Hampton
      */
     public function main(Request $req, Application $app)
     {
-        return [];
+        $response = new HerculesResponse();
+        $response->setEndpoint('/crime/Hampton');
+
+        $esResult = $app['elasticsearch']->search($this->indices, [], []);
+
+        $response = $this->parseResults($esResult, $response);
+
+
+        return $app->json($response->to_json(), $response->getStatusCode());
     }
-    
+
     /**
      * Gets exactly one crime datapoint.
      *
@@ -58,7 +81,7 @@ final class Hampton
         //@TODO fix the return statement cause that's hella busted.
         return new DataPoint('', '', '', new DateTime(), '', []);
     }
-    
+
     /**
      * Refreshes the Hampton Crime Data stored in ES if $timestamp >= NextRefreshTimestamp for this endpoint.
      *
@@ -80,5 +103,34 @@ final class Hampton
         if ($timestamp >= $app['elasticsearch']->getResults($response)[0]['next_refresh_epoch']) {
             continue;
         }
+    }
+
+    /**
+     * Parse the results from Elasticsearch for the Hampton Crime data set.
+     *
+     * @param array            $results  The json data from the request.
+     * @param HerculesResponse $response The response object to append data to.
+     *
+     * @return HerculesReponse The response object all pretty.
+     */
+    private function parseResults(array $results, HerculesResponse $response)
+    {
+        // Parse the results.
+        $resultArray = $results['hits']['hits'];
+        foreach ($resultArray as $key => $value) {
+            $offense = $value['_source']['offense'];
+            $category = $value['_source']['category'];
+            $class = $value['_source']['class'];
+            $occured = new \DateTime($value['_source']['occured']);
+            $city = $value['_source']['city'];
+            $location = $value['_source']['location'];
+
+            if (isset($occured) && gettype($location) === 'array') {
+                $datapoint = new DataPoint($offense, $category, $class, $occured, $city, $location);
+                $response->addDataEntry($datapoint->toArray());
+            }
+        }
+
+        return $response;
     }
 }

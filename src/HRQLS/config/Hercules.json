@@ -17,7 +17,7 @@
       },
       {
         "url": "/crime/Hampton",
-        "controler": "HRQLS\\Controllers\\Crime\\Hampton::main"
+        "controller": "HRQLS\\Controllers\\Crime\\Hampton::main"
       },
       {
         "url": "/food/sanitation",
