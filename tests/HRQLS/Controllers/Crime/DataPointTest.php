@@ -39,6 +39,31 @@ class DataPointTest extends PHPUnit_Framework_TestCase
     }
     
     /**
+     * Verfies behaviour when class is not valid for the specified category.
+     *
+     * @return void
+     *
+     * @expectedException InvalidArgumentException
+     */
+    public function testConstructor_invalidClass()
+    {
+        new DataPoint('an offense', 'FELONY', '1337', new \DateTime(), 'Gotham', ['lat' => 0, 'lon' => 0]);
+    }
+    
+    /**
+     * Verifies behaviour when class and category are not provided.
+     *
+     * @return void
+     */
+    public function testConstructor_noCategory()
+    {
+        $actual = new DataPoint('ASSAULT', '', '', new \DateTime(), 'Gotham', ['lat' => 0, 'lon' => 0]);
+        
+        $this->assertEquals('MISDEMEANOR', $actual->getCategory());
+        $this->assertEquals('1', $actual->getClass());
+    }
+    
+    /**
      * Verifies behaviour of DataPoint getters.
      *
      * @depends testConstructor
