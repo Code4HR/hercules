@@ -219,8 +219,7 @@ final class DataPoint
      */
     private function assignClassAndCategory($offense)
     {
-        switch (strtoupper($offense))
-        {
+        switch (strtoupper($offense)) {
             //Felonies in descending order of severity.
             case 'AGGRAVATED ASSAULT':
             case 'HOMICIDE':
