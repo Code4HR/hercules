@@ -17,7 +17,7 @@ COPY . /var/www/html
 
 # you can replace this at runtime for dev/test
 # otherwise it defaults to prod ES
-ENV ELASTICSEARCH_HOSTNAME_PORT hercules.code4hr.org:33366
+ENV ELASTICSEARCH_URL http://hercules.code4hr.org:33366/
 
 # need to fill this with proper key at runtime
 ENV GREATSCHOOLS_API_KEY examplekey
