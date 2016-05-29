@@ -39,6 +39,31 @@ class DataPointTest extends PHPUnit_Framework_TestCase
     }
     
     /**
+     * Verfies behaviour when class is not valid for the specified category.
+     *
+     * @return void
+     *
+     * @expectedException InvalidArgumentException
+     */
+    public function testConstructor_invalidClass()
+    {
+        new DataPoint('an offense', 'FELONY', '1337', new \DateTime(), 'Gotham', ['lat' => 0, 'lon' => 0]);
+    }
+    
+    /**
+     * Verifies behaviour when class and category are not provided.
+     *
+     * @return void
+     */
+    public function testConstructor_noCategory()
+    {
+        $actual = new DataPoint('ASSAULT', '', '', new \DateTime(), 'Gotham', ['lat' => 0, 'lon' => 0]);
+        
+        $this->assertEquals('MISDEMEANOR', $actual->getCategory());
+        $this->assertEquals('1', $actual->getClass());
+    }
+    
+    /**
      * Verifies behaviour of DataPoint getters.
      *
      * @depends testConstructor
@@ -60,7 +85,7 @@ class DataPointTest extends PHPUnit_Framework_TestCase
     }
     
     /**
-     * Verifies behavious of toJson function.
+     * Verifies behavious of toArray function.
      *
      * @depends testConstructor
      *
@@ -68,11 +93,11 @@ class DataPointTest extends PHPUnit_Framework_TestCase
      *
      * @return void
      */
-    public function testToJson(DataPoint $data)
+    public function testToArray(DataPoint $data)
     {
         $expectedDateTime = new \DateTime();
         
-        $expected = json_encode([
+        $expected = [
             'offense' => 'an offense',
             'category' => 'FELONY',
             'class' => '1',
@@ -82,6 +107,6 @@ class DataPointTest extends PHPUnit_Framework_TestCase
                 'lat' => 0,
                 'lon' => 0,
             ],
-        ]);
+        ];
     }
 }

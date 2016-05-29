@@ -7,6 +7,7 @@
 
 namespace HRQLS\Controllers\Crime;
 
+use HRQLS\Bootstrap;
 use Silex\Application;
 use HRQLS\Models\GuzzleServiceProvider;
 use HRQLS\Controllers\Crime\DataPoint;
@@ -85,12 +86,23 @@ final class Hampton
      * Refreshes the Hampton Crime Data stored in ES if $timestamp >= NextRefreshTimestamp for this endpoint.
      *
      * @param Application $app       Silex Application used to handle refreshing data.
-     * @param DateTime    $timestamp The timestamp of the current request.
+     * @param \DateTime   $timestamp The timestamp of the current request.
      *
      * @return void
      */
-    private function refreshStaleData(Application $app, DateTime $timestamp)
+    private function refreshStaleData(Application $app, \DateTime $timestamp)
     {
+        $query = [
+            'query' => [
+                'match' => ['endpoint' => '/crime/Hampton']
+            ]
+        ];
+        
+        $response = $app['elasticsearch']->search('crime', 'refresh-timestamps', $query);
+        
+        if ($timestamp >= $app['elasticsearch']->getResults($response)[0]['next_refresh_epoch']) {
+            continue;
+        }
     }
 
     /**

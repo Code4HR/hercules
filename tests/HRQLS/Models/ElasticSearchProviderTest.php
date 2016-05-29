@@ -493,4 +493,59 @@ class ElasticSearchProviderTest extends PHPUnit_Framework_TestCase
     {
         return [$type => ['properties' => $properties]];
     }
+    
+    /**
+     * Verifies behaviour of getResults function.
+     *
+     * @return void
+     */
+    public function testGetResults()
+    {
+        $mocks = $this->getMockObjects();
+        $esClientBuilderMock = $mocks[0];
+        
+        $esServiceProvider = new ElasticSearchServiceProvider($esClientBuilderMock);
+        
+        $resultSet = [
+            'took' => 10,
+            'timed_out' => [
+                '_shards' => [
+                    'total' => 2,
+                    'successful' => 1,
+                    'failed' => 1
+                ],
+            ],
+            'hits' => [
+               'total' => 1,
+               'max_score' => 1.0,
+               'hits' => [
+                   [
+                       '_index' => 'testIndex',
+                       '_type' => 'testType',
+                       '_id' => '1337',
+                       '_score' => 1.0,
+                       '_source' => [
+                           'key1' => 'a crap value',
+                           'key2' => 'not so crappy a value'
+                       ]
+                   ],
+                   [
+                       '_index' => 'testIndex',
+                       '_type' => 'testType',
+                       '_id' => '1337',
+                       '_score' => 1.0,
+                       '_source' => [
+                           'key1' => 'a uniquely crappy value',
+                           'key2' => 'a decent value'
+                       ]
+                   ]
+               ],
+            ],
+        ];
+        
+        $expected = $resultSet['hits']['hits'];
+        $actual = $esServiceProvider->getResults($resultSet);
+        
+        $this->assertEquals($expected, $actual);
+    }
 }

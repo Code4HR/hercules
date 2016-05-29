@@ -7,7 +7,7 @@
 
 namespace HRQLS\Models;
 
-use Symfony\Component\HttpFoundation\Response;
+use HRQLS\Exceptions\InvalidResponseException;
 
 /**
  * This class standardizes the responses from hercules by providing a common structure for all responses.
@@ -17,18 +17,18 @@ class HerculesResponse
     /**
      * This holds the status code for the response.
      *
-     * This defaults to 200 as a convienance.
+     * This defaults to 200 as a convenience.
      *
      * @var integer
      */
-    private $statusCode = 200;
+    private $statusCode;
 
     /**
      * Holds the string for the endpoint portion of the response.
      *
      * @var string
      */
-    private $endpoint = null;
+    private $endpoint;
 
     /**
      * The main dataset to be returned.
@@ -45,52 +45,95 @@ class HerculesResponse
     private $errors = [];
 
     /**
-     * The class constructor.
-     */
-    public function __construct()
-    {
-    }
-
-    /**
-     * Allows the setting of the endpoint name to return in the response.
+     * Creates a new HerculesResponse Object from the specified endpoint, data array and errors array.
      *
-     * @param string $endpoint The endpoint name.
-     *
-     * @return void
+     * @param string  $endpoint   The endpoint creating the response.
+     * @param integer $statusCode The HTTP Status Code to be returned with this response. Defaults to 200.
+     * @param array   $data       An array of data to be returned with the response. Defaults to an empty array.
+     * @param array   $errors     An array of the errors that occured while building the response. empty by default.
      */
-    public function setEndpoint($endpoint)
+    public function __construct($endpoint, $statusCode = 200, array $data = [], array $errors = [])
     {
-        // Might be nice to have a validation process here to make sure it's not a bogus endpoint.
-
         $this->endpoint = $endpoint;
+        $this->statusCode = $statusCode;
+        $this->data = $data;
+        $this->errors = $errors;
     }
 
     /**
      * Validation function that checks that the necessary parts of the response have been set.
      *
-     * @return boolean
+     * @return mixed true on success, otherwise an array of error messages.
      */
     private function verifyResponse()
     {
-        if ($this->endpoint === null) {
-            return false;
+        $errorMessages = [];
+        
+        if (!isset($this->endpoint)) {
+            $errorMessages[] = "$endpoint must be set.";
+        }
+        
+        if (!isset($this->statusCode)) {
+            $errorMessages[] = "$statusCode must be set.";
+        }
+        
+        if (!is_array($this->data)) {
+            $errorMessages[] = "$data must be formatted as an array.";
+        }
+        
+        if (!is_array($this->errors)) {
+            $errorMessages[] = "$errors must be formatted as an array.";
         }
 
+        if (!empty($errorMessages)) {
+            return $errorMessages;
+        }
+        
         return true;
     }
 
     /**
-     * Allows access to the current status code.
+     * Gets the current status code.
      *
-     * @return string
+     * @return integer
      */
     public function getStatusCode()
     {
         return $this->statusCode;
     }
+    
+    /**
+     * Gets the endpoint value for this response
+     *
+     * @return string
+     */
+    public function getEndpoint()
+    {
+        return $this->endpoint;
+    }
+    
+    /**
+     * Gets the data beign returned with this response.
+     *
+     * @return array
+     */
+    public function getData()
+    {
+        return $this->data;
+    }
+    
+    /**
+     * Gets the errors array returned with this response.
+     *
+     * @return array
+     */
+    public function getErrors()
+    {
+        return $this->errors;
+    }
 
     /**
-     * Allows the adding of single data entry to the data array of the response object.
+     * Appends the specified data to the end of the current data array.
      *
      * @param array $data The data to add to the response.
      *
@@ -98,11 +141,14 @@ class HerculesResponse
      */
     public function addDataEntry(array $data)
     {
-        array_push($this->data, $data);
+        //According to this SO post
+        //http://stackoverflow.com/questions/559844/whats-better-to-use-in-php-array-value-or-array-pusharray-value
+        //array[] is more efficient that array_push
+        $this->data[] = $data;
     }
 
     /**
-     * Allows the registering of errors to the response object.
+     * Appends the specified errors to the end of the current errors array.
      *
      * @param array $error The error to add.
      *
@@ -110,7 +156,7 @@ class HerculesResponse
      */
     public function addError(array $error)
     {
-        array_push($this->errors, $error);
+        $this->errors[] = $error;
     }
 
     /**
@@ -118,27 +164,22 @@ class HerculesResponse
      *
      * @return string The JSON response.
      *
-     * @throws \Exception If the current state of the response object fails validation.
+     * @throws InvalidResponseException If the current state of the response object fails validation.
      */
     public function to_json()
     {
-        if (!$this->verifyResponse()) {
-            throw new \Exception("Endpoint not functioning correctly.  Bad response setup.");
+        $status = $this->verifyResponse();
+        if (true != $status) {
+            throw new InvalidResponseException('Bad response setup. ' . implode(" \n", $status));
         }
 
-        $responseArray = [
+        $response = [
           endpoint => $this->endpoint,
-          datetime => time()
+          datetime => time()->format('Y-m-d H:i:s'),
+          'data' => $this->data,
+          'errors' => $this->errors,
         ];
 
-        if (sizeof($this->errors) > 0) {
-            $responseArray['errors'] = $this->errors;
-            $responseArray['data'] = [];
-        } else {
-            $responseArray['data'] = $this->data;
-            $responseArray['errors'] = [];
-        }
-
-        return $responseArray;
+        return json_encode($response);
     }
 }
