@@ -5,4 +5,4 @@ hercules:
   volumes:
     - .:/var/www/html
   environment:
-	- ELASTICSEARCH_URL=http://elasticsearch.code4hr.org:33366/
+    - ELASTICSEARCH_URL=http://elasticsearch.code4hr.org:33366/
