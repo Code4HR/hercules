@@ -78,6 +78,7 @@ class HerculesResponseTests
         $expected = json_encode([
             '/endpoint',
             time()->format('Y-m-d H:i:s'),
+            200,
             'data' => [],
             'errors' => [],
         ]);

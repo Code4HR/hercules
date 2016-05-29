@@ -57,15 +57,14 @@ final class Hampton
      */
     public function main(Request $req, Application $app)
     {
-        $response = new HerculesResponse();
-        $response->setEndpoint('/crime/Hampton');
+        $response = new HerculesResponse('/crime/Hampton');
 
         $esResult = $app['elasticsearch']->search($this->indices, [], []);
 
         $response = $this->parseResults($esResult, $response);
 
 
-        return $app->json($response->to_json(), $response->getStatusCode());
+        return $response->to_json();
     }
 
     /**
