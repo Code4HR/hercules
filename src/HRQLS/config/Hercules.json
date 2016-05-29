@@ -13,7 +13,11 @@
       },
       {
         "url": "/crime",
-        "controller": "HRQLS\\Controllers\\Crime::main"
+        "controller": "HRQLS\\Controllers\\Crime\\Crime::main"
+      },
+      {
+        "url": "/crime/Hampton",
+        "controller": "HRQLS\\Controllers\\Crime\\Hampton::main"
       },
       {
         "url": "/crime/Hampton",
