@@ -1,44 +1,26 @@
-FROM debian:8.1
+FROM code4hr/hercules-dockerfile-base
 
-###################
-# Package Manager Dependencies
-RUN apt-get update
-RUN \
-  apt-get install -y \
-  vim \
-  curl \
-  ant \
-  build-essential \
-  apache2 \
-  apache2-doc \
-  php5 \
-  libapache2-mod-php5 \
-  sudo \
-  make \
-  net-tools \
-  amavisd-new \
-  libcurl4-gnutls-dev
+# Copy composer files into the app directory.
+COPY composer.json composer.lock ./
 
-##################
-# ElasticSearch install
-RUN \
-  curl -L -O https://download.elastic.co/elasticsearch/elasticsearch/elasticsearch-1.7.1.tar.gz && \
-  tar -xzvf ./elasticsearch-1.7.1.tar.gz && \
-  rm ./elasticsearch-1.7.1.tar.gz && \
-  mv ./elasticsearch-1.7.1 /usr/local/share/elasticsearch && \
-  /usr/local/share/elasticsearch/bin/plugin -install mobz/elasticsearch-head
+# Install dependencies with Composer.
+# --prefer-source fixes issues with download limits on Github.
+# --no-interaction makes sure composer can run fully automated
+RUN composer install --prefer-source --no-interaction
 
-RUN \
-  apt-get install -y php5-curl && \
-  rm /etc/apache2/sites-available/000-default.conf && \
-  a2enmod rewrite
+# copy in source files
+RUN echo "date.timezone = 'America/New_York'" >> /usr/local/etc/php/php.ini
+COPY apache.conf /etc/apache2/sites-available/
+RUN a2ensite apache
+RUN a2enmod rewrite
+COPY . /var/www/html
 
-ADD DockerConfig/sites-available/000-default.conf /etc/apache2/sites-available/
+# you can replace this at runtime for dev/test
+# otherwise it defaults to prod ES
+ENV ELASTICSEARCH_HOSTNAME_PORT hercules.code4hr.org:33366
 
-###################
-# Work Directory
-WORKDIR /var/www/html
+# need to fill this with proper key at runtime
+ENV GREATSCHOOLS_API_KEY examplekey
 
-###################
-# Container Command
-CMD ["/bin/bash"]
+EXPOSE 80
+CMD ["apache2-foreground"]
