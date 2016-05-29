@@ -85,7 +85,7 @@ class DataPointTest extends PHPUnit_Framework_TestCase
     }
     
     /**
-     * Verifies behavious of toJson function.
+     * Verifies behavious of toArray function.
      *
      * @depends testConstructor
      *
@@ -93,11 +93,11 @@ class DataPointTest extends PHPUnit_Framework_TestCase
      *
      * @return void
      */
-    public function testToJson(DataPoint $data)
+    public function testToArray(DataPoint $data)
     {
         $expectedDateTime = new \DateTime();
         
-        $expected = json_encode([
+        $expected = [
             'offense' => 'an offense',
             'category' => 'FELONY',
             'class' => '1',
@@ -107,6 +107,6 @@ class DataPointTest extends PHPUnit_Framework_TestCase
                 'lat' => 0,
                 'lon' => 0,
             ],
-        ]);
+        ];
     }
 }

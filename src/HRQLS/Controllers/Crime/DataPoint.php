@@ -112,7 +112,7 @@ final class DataPoint
     }
     
     /**
-     * Converts the crime datapoint to a JSON object
+     * Converts the crime datapoint to an associative array object
      *
      * @return array Like [
      *   'offense' => '',
@@ -125,32 +125,15 @@ final class DataPoint
      *     'lon' => (Float),
      *   ];
      */
-    public function toJson()
+    public function toArray()
     {
-        return json_encode([
+        return [
            'offense' => $this->offense,
            'category' => $this->category,
            'class' => $this->class,
            'occurred' => $this->occured,
            'city' => $this->city,
            'locaton' => $this->location,
-        ]);
-    }
-
-    /**
-     * Returns the crime datapoint as an array.
-     *
-     * @return array
-     */
-    public function toArray()
-    {
-        return [
-            'offense' => $this->offense,
-            'category' => $this->category,
-            'class' => $this->class,
-            'occurred' => $this->occured,
-            'city' => $this->city,
-            'location' => $this->location
         ];
     }
     
