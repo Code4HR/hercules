@@ -1,0 +1,8 @@
+hercules:
+  image: code4hr/hercules:dockerize
+  ports: 
+    - "8080:80"
+  volumes:
+    - .:/var/www/html
+  environment:
+    - ELASTICSEARCH_URL=http://elasticsearch.code4hr.org:33366/
