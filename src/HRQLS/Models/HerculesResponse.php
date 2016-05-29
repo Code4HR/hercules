@@ -175,7 +175,8 @@ class HerculesResponse
 
         $response = [
           endpoint => $this->endpoint,
-          datetime => time()->format('Y-m-d H:i:s'),
+          datetime => time(),
+          statusCode => $this->statusCode,
           'data' => $this->data,
           'errors' => $this->errors,
         ];
