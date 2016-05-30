@@ -133,7 +133,7 @@ final class DataPoint
            'class' => $this->class,
            'occurred' => $this->occured,
            'city' => $this->city,
-           'locaton' => $this->location,
+           'location' => $this->location,
         ];
     }
     
