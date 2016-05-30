@@ -63,8 +63,9 @@ final class Hampton
 
         $response = $this->parseResults($esResult, $response);
 
-
-        return $response->to_json();
+        // The frontend expects a JSONP format, to do this the response must
+        // be wrapped in a callback.
+        return $_GET['callback'] . '('.$response->to_json().')';
     }
 
     /**
