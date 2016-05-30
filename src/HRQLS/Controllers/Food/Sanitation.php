@@ -60,6 +60,6 @@ final class Sanitation
             }
         }
 
-        return new Response(json_encode($sanitationdata), 201);
+        return new Response($_GET['callback'] . '('.json_encode($sanitationdata).')', 201);
     }
 }
