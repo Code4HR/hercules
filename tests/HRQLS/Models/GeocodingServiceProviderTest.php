@@ -6,32 +6,27 @@
  */
 use Silex\Application;
 use HRQLS\Models\GuzzleServiceProvider;
+use HRQLS\Models\GeocodingServiceProvider;
+use HRQLS\Exceptions\FailedRequestException;
 
 /**
  * Defines Geocoding Service Provider unit tests.
  */
-class GeocodingServiceProviderTests extends PHPUnit_Framework_TestCase
+final class GeocodingServiceProviderTests extends PHPUnit_Framework_TestCase
 {
     /**
      * Constructs the base mock objects reuired to test the Geocoding Service provider.
      *
      * @return array like [
-     *     'silex' => Silex Mock Object.
      *     'guzzle' => Mock Guzzle Service Provider Object.
      *     'response' => Mock Guzzle Response Object.
-     *     'geocoder' => Mock Geocoding Service Provider. 
      * ];
      */
     private function getMocks()
     {
-        $appMock = $this->getMockBuilder('Silex\Application')
-            ->disableOriginalConstructor()
-            ->setMethods(['register'])
-            ->getMock();
-            
         $guzzleMock = $this->getMockBuilder('GuzzleHttp\Client')
             ->disableOriginalConstructor()
-            ->setMethods(['request'])
+            ->setMethods(['get'])
             ->getMock();
             
         $responseMock = $this->getMockBuilder('GuzzleHttp\Psr7\Response')
@@ -39,25 +34,101 @@ class GeocodingServiceProviderTests extends PHPUnit_Framework_TestCase
             ->setMethods(['getStatusCode', 'getBody'])
             ->getMock();
             
-        $geocoderMock = $this->getMockBuilder()
-            ->disableOriginalConstructor()
-            ->setMethods(['geocode'])
-            ->getMocks();
-            
         return [
-            'silex' => $appMock,
             'guzzle' => $guzzleMock,
             'response' => $responseMock,
-            'geocoder' => $geocoderMock,
         ];
     }
     
-    public function testGecode()
+    /**
+     * Sets up environment variables required for Geocoding Service Provider unit tests.
+     *
+     * @return void
+     */
+    protected function setUp()
     {
-        $mocks = getMocks();
-        $appMock = $mocks['silex'];
+        putenv('GOOGLE_GEOCODE_KEY=3471337');
+    }
+    
+    /**
+     * removes environment variable created for these unit tests.
+     *
+     * @return void
+     */
+    protected function tearDown()
+    {
+        putenv('GOOGLE_GEOCODE_KEY');
+    }
+    
+    /**
+     * Verifies constructor for geocoding service provider.
+     *
+     * @return void
+     */
+    public function testConstructor()
+    {
+        $geocoder = new GeocodingServiceProvider(self::getMocks()['guzzle']);
+        
+        $this->assertInstanceOf('HRQLS\Models\GeocodingServiceProvider', $geocoder);
+    }
+    
+    /**
+     * Verifies behaviour when geocoding an address.
+     *
+     * @return void
+     */
+    public function testGeocode()
+    {
+        $mocks = self::getMocks();
         $guzzleMock = $mocks['guzzle'];
         $responseMock = $mocks['response'];
-        $geocodingServiceProviderMock = $mocks['geocoder'];
+        
+        $responseBody = [
+            'results' => [
+                'geometry' => [
+                    'location' => [
+                        'lat' => 0,
+                        'lng' => 0,
+                    ],
+                ],
+            ],
+        ];
+        
+        $expected = [
+            'lat' => 0,
+            'lon' => 0,
+        ];
+        
+        $responseMock->method('getStatusCode')->willReturn(200);
+        $responseMock->method('getBody')->willReturn($responseBody);
+        
+        $guzzleMock->method('get')->willReturn($responseMock);
+        
+        $geocoder = new GeocodingServiceProvider($guzzleMock);
+        
+        $actual = $geocoder->geocode('221 Baker Street, London UK');
+        
+        $this->assertEquals($expected, $actual);
+    }
+    
+    /**
+     * Verifies behvaiour when geocoding an address that cannot be geocoded.
+     *
+     * @return void
+     *
+     * @expectedException HRQLS\Exceptions\FailedRequestException
+     */
+    public function testGeocode_Address()
+    {
+        $mocks = self::getMocks();
+        $guzzleMock = $mocks['guzzle'];
+        $responseMock = $mocks['response'];
+        
+        $responseMock->method('getStatusCode')->willReturn(400);
+        $guzzleMock->method('get')->willReturn($responseMock);
+        
+        $geocoder = new GeocodingServiceProvider($guzzleMock);
+        
+        $geocoder->geocode('221 Baker St.');
     }
 }
