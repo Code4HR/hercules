@@ -92,6 +92,7 @@ final class Hampton
      */
     private function refreshStaleData(Application $app, \DateTime $timestamp)
     {
+        //TODO We may need to bootstrap the $app so the service providers are there.
         $query = [
             'query' => [
                 'match' => ['endpoint' => '/crime/Hampton']
@@ -100,7 +101,14 @@ final class Hampton
         
         $response = $app['elasticsearch']->search('crime', 'refresh-timestamps', $query);
         
-        if ($timestamp >= $app['elasticsearch']->getResults($response)[0]['next_refresh_epoch']) {
+        //If timestamp is before the next refresh epoch we don't need to update stale data.
+        if ($timestamp < $app['elasticsearch']->getResults($response)[0]['next_refresh_epoch']) {
+            return;
+        }
+
+        $crimes = json_decode(file_get_contents('https://data.hampton.gov/resource/umc3-tsey.json'));
+        
+        foreach ($crimes as $crime) {
             continue;
         }
     }

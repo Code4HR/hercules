@@ -133,7 +133,7 @@ final class DataPoint
            'class' => $this->class,
            'occurred' => $this->occured,
            'city' => $this->city,
-           'locaton' => $this->location,
+           'location' => $this->location,
         ];
     }
     
@@ -219,8 +219,7 @@ final class DataPoint
      */
     private function assignClassAndCategory($offense)
     {
-        switch (strtoupper($offense))
-        {
+        switch (strtoupper($offense)) {
             //Felonies in descending order of severity.
             case 'AGGRAVATED ASSAULT':
             case 'HOMICIDE':
