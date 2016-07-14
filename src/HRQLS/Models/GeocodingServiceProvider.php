@@ -83,7 +83,7 @@ class GeocodingServiceProvider implements ServiceProviderInterface
     public function geocode($address)
     {
         //Construct the request URL
-        $requestUrl = self::URL . '?address' . urlencode($address) . '&' . $this->apiKey;
+        $requestUrl = self::URL . '?address' . urlencode($address) . '&key=' . $this->apiKey;
 
         $response = $this->guzzle->get(self::URL);
         
