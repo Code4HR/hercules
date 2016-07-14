@@ -41,40 +41,25 @@ final class Sanitation
      */
     public function main(Request $req, Application $app)
     {
-        $sliderPercentage = $req->get('slidervalue');
         $response = [];
         foreach ($this->cities as $city => $url) {
             $result = file_get_contents($url);
             array_push($response, json_decode($result, true));
         }
 
-        $sanitationdata = [];
-        foreach ([50, 75, 80, 90] as $value) {
-            $updatedslidervalue = (($sliderPercentage * (100 - $value) ) / 100) + $value;
-            $sanitationdata = [];
-            foreach ($response as $key => $res) {
-                $apidata = [];
-                foreach ($res as $toldata) {
-                    $data['name'] = $toldata['name'];
-                    $data['latitude'] = $toldata['coordinates']['latitude'];
-                    $data['longitude'] = $toldata['coordinates']['longitude'];
-                    $data['city'] = $toldata['city'];
-                    $score = $toldata['score'];
-                    $apidata[] = $data['city'];
-                    if ($score >= $updatedslidervalue) {
-                        $sanitationdata[] = $data;
-                    }
-
-                    if (count($apidata) > 50) {
-                        break;
-                    }
-                }
-            }
-            if (count($sanitationdata)) {
-                break;
+        foreach ($response as $key => $res) {
+            $apidata = [];
+            foreach ($res as $toldata) {
+                $data['name'] = $toldata['name'];
+                $data['latitude'] = $toldata['coordinates']['latitude'];
+                $data['longitude'] = $toldata['coordinates']['longitude'];
+                $data['city'] = $toldata['city'];
+                $data['score'] = $toldata['score'];
+                $apidata[] = $data['city'];
+                    $sanitationdata[] = $data;
             }
         }
 
-        return new Response(json_encode($sanitationdata), 201);
+        return new Response($_GET['callback'] . '('.json_encode($sanitationdata).')', 201);
     }
 }
