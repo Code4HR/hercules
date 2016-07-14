@@ -14,6 +14,7 @@ use Silex\Application;
 use Silex\Provider\TwigServiceProvider;
 use HRQLS\Models\ElasticSearchServiceProvider;
 use HRQLS\Models\GuzzleServiceProvider;
+use HRQLS\Models\GeocodingServiceProvider;
 use Monolog\Logger;
 use JsonSchema\Uri\UriRetriever;
 use Elasticsearch\ClientBuilder;
@@ -154,6 +155,16 @@ class Bootstrap
     public function loadHttpClients()
     {
         $this->app['guzzle'] = new GuzzleServiceProvider(new Client());
+    }
+
+    /**
+     * Creates various utilies required by the application.
+     *
+     * @return void
+     */
+    public function loadLibarayProviders()
+    {
+        $this->app['geocode'] = new GeocodingServiceProvider(new Client());
     }
 
     /**
