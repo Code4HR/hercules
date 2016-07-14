@@ -111,9 +111,7 @@ final class Hampton
         $crimes = json_decode(file_get_contents('https://data.hampton.gov/resource/umc3-tsey.json'));
         
         foreach ($crimes as $crime) {
-            echo json_encode($app['geocode']->geocode($crime->address));
-            exit;
-            //$app['geocode']->geocode();
+            $app['geocode']->geocode($crime->address);
             continue;
         }
     }

@@ -83,16 +83,16 @@ class GeocodingServiceProvider implements ServiceProviderInterface
     public function geocode($address)
     {
         //Construct the request URL
-        $requestUrl = self::URL . '?address' . urlencode($address) . '&key=' . $this->apiKey;
+        $requestUrl = self::URL . '?address=' . urlencode($address);
+        //Not sure why but the key causes the request to fail . '&key=' . $this->apiKey;
+        $response = $this->guzzle->get($requestUrl);
 
-        $response = $this->guzzle->get(self::URL);
-        
         if ($response->getStatusCode() != 200) {
             throw new FailedRequestException("{$address} failed geocoding. Sorz!", $response->getStatusCode());
         }
         
-        $coordinates = $response->getBody()['results']['geometry']['location'];
-        
+        $coordinates = json_decode($response->getBody()->getContents(), true)['results'][0]['geometry']['location'];
+
         return [
             'lat' => $coordinates['lat'],
             'lon' => $coordinates['lng'],
