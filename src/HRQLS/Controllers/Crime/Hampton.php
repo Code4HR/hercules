@@ -59,6 +59,8 @@ final class Hampton
     {
         $response = new HerculesResponse('/crime/Hampton');
 
+        $this->refreshStaleData($app, new \DateTime());
+
         $esResult = $app['elasticsearch']->search($this->indices, [], []);
 
         $response = $this->parseResults($esResult, $response);
@@ -99,7 +101,7 @@ final class Hampton
             ]
         ];
         
-        $response = $app['elasticsearch']->search('crime', 'refresh-timestamps', $query);
+        $response = $app['elasticsearch']->search(['crime'], ['refresh-timestamps'], $query);
         
         //If timestamp is before the next refresh epoch we don't need to update stale data.
         if ($timestamp < $app['elasticsearch']->getResults($response)[0]['next_refresh_epoch']) {
