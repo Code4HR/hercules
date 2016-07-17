@@ -19,7 +19,7 @@ class DataPointTest extends PHPUnit_Framework_TestCase
      */
     public function testConstructor()
     {
-        $data = new DataPoint('an offense', 'Felony', '1', new \DateTime(), 'Gotham', ['lat' => 0, 'lon' => 0]);
+        $data = new DataPoint('an offense', new \DateTime(), 'Gotham', ['lat' => 0, 'lon' => 0], 'Felony', '1');
         
         $this->assertInstanceOf('HRQLS\Controllers\Crime\DataPoint', $data);
         
@@ -35,7 +35,7 @@ class DataPointTest extends PHPUnit_Framework_TestCase
      */
     public function testConstructor_invalidCategory()
     {
-        new DataPoint('an offense', 'invalid', '1', new \DateTime(), 'Gotham', ['lat' => 0, 'lon' => 0]);
+        new DataPoint('an offense', new \DateTime(), 'Gotham', ['lat' => 0, 'lon' => 0], 'invalid', '1');
     }
     
     /**
@@ -47,7 +47,7 @@ class DataPointTest extends PHPUnit_Framework_TestCase
      */
     public function testConstructor_invalidClass()
     {
-        new DataPoint('an offense', 'FELONY', '1337', new \DateTime(), 'Gotham', ['lat' => 0, 'lon' => 0]);
+        new DataPoint('an offense', new \DateTime(), 'Gotham', ['lat' => 0, 'lon' => 0], 'FELONY', '1337');
     }
     
     /**
@@ -57,7 +57,7 @@ class DataPointTest extends PHPUnit_Framework_TestCase
      */
     public function testConstructor_noCategory()
     {
-        $actual = new DataPoint('ASSAULT', '', '', new \DateTime(), 'Gotham', ['lat' => 0, 'lon' => 0]);
+        $actual = new DataPoint('ASSAULT', new \DateTime(), 'Gotham', ['lat' => 0, 'lon' => 0], '', '');
         
         $this->assertEquals('MISDEMEANOR', $actual->getCategory());
         $this->assertEquals('1', $actual->getClass());
@@ -67,7 +67,6 @@ class DataPointTest extends PHPUnit_Framework_TestCase
      * Verifies behaviour of DataPoint getters.
      *
      * @depends testConstructor
-     *
      *
      * @param DataPoint $data The DataPoint object to use in test.
      *
