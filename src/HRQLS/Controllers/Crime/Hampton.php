@@ -34,6 +34,13 @@ final class Hampton
      * @var array
      */
     private $types = ['crimes'];
+    
+    /**
+     * Default Location array for the City of Hampton.
+     *
+     * @var array
+     */
+    private $defaultCoordinates = ['lat' => 37.0450412, 'lon' => -76.4309788];
 
     /**
      * Main entry point for City of Hampton Crime Endpoint.
@@ -59,14 +66,13 @@ final class Hampton
     {
         $response = new HerculesResponse('/crime/Hampton');
 
-        $this->refreshStaleData($app, new \DateTime());
+        //$this->refreshStaleData($app, new \DateTime());
 
         $esResult = $app['elasticsearch']->search($this->indices, [], []);
 
         $response = $this->parseResults($esResult, $response);
 
-        // The frontend expects a JSONP format, to do this the response must
-        // be wrapped in a callback.
+        // The frontend expects a JSONP format, to do this the response must be wrapped in a callback.
         return $_GET['callback'] . '('.$response->to_json().')';
     }
 
@@ -94,28 +100,27 @@ final class Hampton
      */
     private function refreshStaleData(Application $app, \DateTime $timestamp)
     {
-        //TODO We may need to bootstrap the $app so the service providers are there.
-        $query = [
-            'query' => [
-                'match' => ['endpoint' => '/crime/Hampton']
-            ]
-        ];
-        
-        $response = $app['elasticsearch']->search(['crime'], ['refresh-timestamps'], $query);
-        
-        //If timestamp is before the next refresh epoch we don't need to update stale data.
-        if ($timestamp < $app['elasticsearch']->getResults($response)[0]['next_refresh_epoch']) {
-            return;
-        }
-
         $crimes = json_decode(file_get_contents('https://data.hampton.gov/resource/umc3-tsey.json'));
         
         foreach ($crimes as $crime) {
-            $crimeDoc = new \DataPoint(
-                $crime['description'],
-                $crime
+            $coordinates = $app['geocode']->geocode($crime->address);
+            
+            if ($coordinates['lat'] === null || $coordinates['lon'] === null) {
+                $coordinates = $this->defaultCoordinates;
+            }
+            
+            $crimeDoc = new DataPoint(
+                $crime->description,
+                new \DateTime($crime->date_time),
+                'Hampton',
+                $coordinates
             );
-            $app['geocode']->geocode($crime->address);
+            
+            try {
+                $app['elasticsearch']->insert($this->indices, $this->types, $crimeDoc->toArray());
+            } catch (Exception $e) {
+                echo $e->getMessage();
+            }
         }
     }
 
@@ -140,7 +145,7 @@ final class Hampton
             $location = $value['_source']['location'];
 
             if (isset($occured) && gettype($location) === 'array') {
-                $datapoint = new DataPoint($offense, $category, $class, $occured, $city, $location);
+                $datapoint = new DataPoint($offense, $occured, $city, $location, $category, $class);
                 $response->addDataEntry($datapoint->toArray());
             }
         }
