@@ -10,6 +10,8 @@ $bootstrap->startRenderEngine();
 
 $bootstrap->connectDatabases();
 
+$bootstrap->loadLibarayProviders();
+
 $bootstrap->registerRoutes();
 
 $bootstrap->startupSite();

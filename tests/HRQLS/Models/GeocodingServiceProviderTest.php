@@ -20,6 +20,7 @@ final class GeocodingServiceProviderTests extends PHPUnit_Framework_TestCase
      * @return array like [
      *     'guzzle' => Mock Guzzle Service Provider Object.
      *     'response' => Mock Guzzle Response Object.
+     *     'bodyContent' => Mock Body Content for Response
      * ];
      */
     private function getMocks()
@@ -34,9 +35,15 @@ final class GeocodingServiceProviderTests extends PHPUnit_Framework_TestCase
             ->setMethods(['getStatusCode', 'getBody'])
             ->getMock();
             
+        $bodyContentMock = $this->getMockBuilder('GuzzleHttp\Psr7\Stream')
+            ->disableOriginalConstructor()
+            ->setMethods(['getContents'])
+            ->getMock();
+            
         return [
             'guzzle' => $guzzleMock,
             'response' => $responseMock,
+            'bodyContent' => $bodyContentMock
         ];
     }
     
@@ -82,13 +89,16 @@ final class GeocodingServiceProviderTests extends PHPUnit_Framework_TestCase
         $mocks = self::getMocks();
         $guzzleMock = $mocks['guzzle'];
         $responseMock = $mocks['response'];
+        $bodyContentMock = $mocks['bodyContent'];
         
         $responseBody = [
             'results' => [
-                'geometry' => [
-                    'location' => [
-                        'lat' => 0,
-                        'lng' => 0,
+                [
+                    'geometry' => [
+                        'location' => [
+                            'lat' => 0,
+                            'lng' => 0,
+                        ],
                     ],
                 ],
             ],
@@ -99,8 +109,9 @@ final class GeocodingServiceProviderTests extends PHPUnit_Framework_TestCase
             'lon' => 0,
         ];
         
+        $bodyContentMock->method('getContents')->willReturn(json_encode($responseBody));
         $responseMock->method('getStatusCode')->willReturn(200);
-        $responseMock->method('getBody')->willReturn($responseBody);
+        $responseMock->method('getBody')->willReturn($bodyContentMock);
         
         $guzzleMock->method('get')->willReturn($responseMock);
         
