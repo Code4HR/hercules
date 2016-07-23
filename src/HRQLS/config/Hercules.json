@@ -26,6 +26,34 @@
       {
         "url": "/food/sanitation",
         "controller": "HRQLS\\Controllers\\Food\\Sanitation::main"
+      },
+      {
+        "url": "schools",
+        "controller": "HRQLS\\Controllers\\Schools\\School::main"
+      },
+      {
+        "url": "schools/hampton",
+        "controller": "HRQLS\\Controllers\\Schools\\hampton.php"
+      },
+      {
+        "url": "schools/vabeach",
+        "controller": "HRQLS\\Controllers\\Schools\\vabeach.php"
+      },
+      {
+        "url": "schools/norfolk",
+        "controller": "HRQLS\\Controllers\\Schools\\norfolk.php"
+      },
+      {
+        "url": "schools/portsmouth",
+        "controller": "HRQLS\\Controllers\\Schools\\portsmouth.php"
+      },
+      {
+        "url": "schools/chesapeake",
+        "controller": "HRQLS\\Controllers\\Schools\\chesapeake.php"
+      },
+      {
+        "url": "schools/suffolk",
+        "controller": "HRQLS\\Controllers\\Schools\\suffolk.php"
       }
     ]
   }
