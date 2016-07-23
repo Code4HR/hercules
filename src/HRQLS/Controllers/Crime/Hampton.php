@@ -65,63 +65,12 @@ final class Hampton
     public function main(Request $req, Application $app)
     {
         $response = new HerculesResponse('/crime/Hampton');
-
-        //$this->refreshStaleData($app, new \DateTime());
-
         $esResult = $app['elasticsearch']->search($this->indices, [], []);
 
         $response = $this->parseResults($esResult, $response);
 
         // The frontend expects a JSONP format, to do this the response must be wrapped in a callback.
         return $_GET['callback'] . '('.$response->to_json().')';
-    }
-
-    /**
-     * Gets exactly one crime datapoint.
-     *
-     * @param Request     $req The Request object to be handled.
-     * @param Application $app Silex Application object responsible for handling requests.
-     *
-     * @return \HRQLS\Controllers\Crime\DataPoint
-     */
-    public function get(Request $req, Application $app)
-    {
-        //@TODO fix the return statement cause that's hella busted.
-        return new DataPoint('', '', '', new DateTime(), '', []);
-    }
-
-    /**
-     * Refreshes the Hampton Crime Data stored in ES if $timestamp >= NextRefreshTimestamp for this endpoint.
-     *
-     * @param Application $app       Silex Application used to handle refreshing data.
-     * @param \DateTime   $timestamp The timestamp of the current request.
-     *
-     * @return void
-     */
-    private function refreshStaleData(Application $app, \DateTime $timestamp)
-    {
-        $crimes = json_decode(file_get_contents('https://data.hampton.gov/resource/umc3-tsey.json'));
-        
-        foreach ($crimes as $crime) {
-            $coordinates = $app['geocode']->geocode($crime->address);
-            
-            if ($coordinates['lat'] === null || $coordinates['lon'] === null) {
-                $coordinates = $this->defaultCoordinates;
-            }
-            
-            $crimeDoc = new DataPoint(
-                $crime->description,
-                new \DateTime($crime->date_time),
-                'Hampton',
-                $coordinates
-            );
-            
-            try {
-                $app['elasticsearch']->insert($this->indices, $this->types, $crimeDoc->toArray());
-            } catch (Exception $e) {
-                echo $e->getMessage();
-            }
-        }
     }
 
     /**
