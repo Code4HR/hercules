@@ -33,27 +33,27 @@
       },
       {
         "url": "schools/hampton",
-        "controller": "HRQLS\\Controllers\\Schools\\hampton.php"
+        "controller": "HRQLS\\Controllers\\Schools\\hampton.php::main"
       },
       {
         "url": "schools/vabeach",
-        "controller": "HRQLS\\Controllers\\Schools\\vabeach.php"
+        "controller": "HRQLS\\Controllers\\Schools\\vabeach.php::main"
       },
       {
         "url": "schools/norfolk",
-        "controller": "HRQLS\\Controllers\\Schools\\norfolk.php"
+        "controller": "HRQLS\\Controllers\\Schools\\norfolk.php::main"
       },
       {
         "url": "schools/portsmouth",
-        "controller": "HRQLS\\Controllers\\Schools\\portsmouth.php"
+        "controller": "HRQLS\\Controllers\\Schools\\portsmouth.php::main"
       },
       {
         "url": "schools/chesapeake",
-        "controller": "HRQLS\\Controllers\\Schools\\chesapeake.php"
+        "controller": "HRQLS\\Controllers\\Schools\\chesapeake.php::main"
       },
       {
         "url": "schools/suffolk",
-        "controller": "HRQLS\\Controllers\\Schools\\suffolk.php"
+        "controller": "HRQLS\\Controllers\\Schools\\suffolk.php::main"
       }
     ]
   }
