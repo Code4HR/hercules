@@ -20,40 +20,36 @@
         "controller": "HRQLS\\Controllers\\Crime\\Hampton::main"
       },
       {
-        "url": "/crime/Hampton",
-        "controller": "HRQLS\\Controllers\\Crime\\Hampton::main"
-      },
-      {
         "url": "/food/sanitation",
         "controller": "HRQLS\\Controllers\\Food\\Sanitation::main"
       },
       {
-        "url": "schools",
+        "url": "/schools",
         "controller": "HRQLS\\Controllers\\Schools\\School::main"
       },
       {
-        "url": "schools/hampton",
-        "controller": "HRQLS\\Controllers\\Schools\\hampton.php::main"
+        "url": "/schools/hampton",
+        "controller": "HRQLS\\Controllers\\Schools\\Hampton::main"
       },
       {
-        "url": "schools/vabeach",
-        "controller": "HRQLS\\Controllers\\Schools\\vabeach.php::main"
+        "url": "/schools/vabeach",
+        "controller": "HRQLS\\Controllers\\Schools\\VABeach::main"
       },
       {
-        "url": "schools/norfolk",
-        "controller": "HRQLS\\Controllers\\Schools\\norfolk.php::main"
+        "url": "/schools/norfolk",
+        "controller": "HRQLS\\Controllers\\Schools\\Norfolk::main"
       },
       {
-        "url": "schools/portsmouth",
-        "controller": "HRQLS\\Controllers\\Schools\\portsmouth.php::main"
+        "url": "/schools/portsmouth",
+        "controller": "HRQLS\\Controllers\\Schools\\Portsmouth::main"
       },
       {
-        "url": "schools/chesapeake",
-        "controller": "HRQLS\\Controllers\\Schools\\chesapeake.php::main"
+        "url": "/schools/chesapeake",
+        "controller": "HRQLS\\Controllers\\Schools\\Chesapeake::main"
       },
       {
-        "url": "schools/suffolk",
-        "controller": "HRQLS\\Controllers\\Schools\\suffolk.php::main"
+        "url": "/schools/suffolk",
+        "controller": "HRQLS\\Controllers\\Schools\\Suffolk::main"
       }
     ]
   }
