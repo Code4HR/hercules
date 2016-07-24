@@ -30,7 +30,7 @@ final class School
      * @param Request     $req The request to be handled.
      * @param Application $app The Silex Application used to handle the request.
      *
-     * @return array An array of datapoints describing schools in Hampton, VABeach, Norfolk, Portsmouth, Chesapeake, and Suffolk.
+     * @return array An array of schools in Hampton, VABeach, Norfolk, Portsmouth, Chesapeake, and Suffolk.
      */
     public function main(Request $req, Application $app)
     {
@@ -74,7 +74,7 @@ final class School
      */
     public function formatRequestUrl($search)
     {
-        return 'http://api.greatschools.org/search/schools?key=' . self::getApiKey() . '&state=VA&q=' . $search . '&sort=alpha';
+        return 'http://api.greatschools.org/search/schools?key=' . self::getApiKey() . '&state=VA&q=' . $search;
     }
     
     /**
