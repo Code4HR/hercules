@@ -29,7 +29,7 @@ final class Chesapeake
     public function main(Request $req, Application $app)
     {
         $requestUrl = SchoolUtils::formatRequestUrl('Chesapeake');
-        $response = $app['guzzle']->get($requestUrl);
+        $response = $app['guzzle']->get($requestUrl, []);
         
         $schools = SchoolUtils::convertToJson($response->getBody());
         $schools = filterResultsByCity($schools, 'chesapeake');

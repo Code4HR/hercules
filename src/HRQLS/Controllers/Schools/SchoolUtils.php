@@ -12,14 +12,7 @@ use Silex\Application;
  * Defines abstract base class for all School Controllers
  */
 final class SchoolUtils
-{
-    /**
-     * The base URL for the souce school API.
-     *
-     * @var string
-     */
-    public $url = 'http://api.greatschools.org/search/schools';
-    
+{ 
     /**
      * Gets the ApiKey for the Great Schools API.
      *
@@ -39,7 +32,7 @@ final class SchoolUtils
      */
     public static function formatRequestUrl($search)
     {
-        return urlencode($url . '?key=' . self::getApiKey() . '&state=VA&q=' . $search);
+        return 'http://api.greatschools.org/search/schools?key=' . self::getApiKey() . '&state=VA&q=' . $search;
     }
     
     /**
