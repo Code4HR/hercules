@@ -9,7 +9,7 @@ namespace HRQLS\Controllers\Schools;
 
 use Silex\Application;
 use Symfony\Component\HttpFoundation\Request;
-use HRQLS\Controllers\Models\HerculesResponse;
+use HRQLS\Models\HerculesResponse;
 use HRQLS\Controllers\Schools\SchoolUtils;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -32,9 +32,9 @@ final class Chesapeake
         $response = $app['guzzle']->get($requestUrl, []);
         
         $schools = SchoolUtils::convertToJson($response->getBody());
-        $schools = filterResultsByCity($schools, 'chesapeake');
+        $schools = SchoolUtils::filterResultsByCity($schools, 'chesapeake');
         
-        $herculesResponse = new \HerculesResponse('/schools/chesapeake', 200, $schools);
+        $herculesResponse = new HerculesResponse('/schools/chesapeake', 200, $schools);
         
         // The frontend expects a JSONP format, to do this the response must be wrapped in a callback.
         return $_GET['callback'] . '(' . $herculesResponse->to_json() . ')';
