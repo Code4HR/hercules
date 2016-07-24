@@ -2,16 +2,16 @@
 /**
  * File for abstract school controller. All other School Controllers will inherit from this one.
  *
- * @package HRQLS\Controllers
+ * @package HRQLS/Controllers
  */
-namespace HRQLS\Controllers;
+namespace HRQLS\Controllers\Schools;
 
 use Silex\Application;
 
 /**
  * Defines abstract base class for all School Controllers
  */
-abstract class SchoolController
+final class SchoolUtils
 {
     /**
      * The base URL for the souce school API.
@@ -37,9 +37,9 @@ abstract class SchoolController
      *
      * @return string
      */
-    public function formatRequestUrl($search)
+    public static function formatRequestUrl($search)
     {
-        return urlencode(this::url . '?key=' . getApiKey() . '&state=VA&q=' . $search);
+        return urlencode($url . '?key=' . self::getApiKey() . '&state=VA&q=' . $search);
     }
     
     /**
@@ -49,7 +49,7 @@ abstract class SchoolController
      *
      * @return array An associative array.
      */
-    protected function convertToJson($data)
+    public static function convertToJson($data)
     {
         $obj = simplexml_load_string($data);
         $jsonData = json_encode($obj);
@@ -67,8 +67,15 @@ abstract class SchoolController
      *
      * @return array An array of data entries that match the city specified as the filter.
      */
-    protected function filterResultsByCity(array $data, $city)
+    public static function filterResultsByCity(array $data, $city)
     {
-        return [];
+        $filteredData = [];
+        foreach ($data as $entry) {
+            if ($data['city'] === $city) {
+                $filteredData[] = $entry;
+            }
+        }
+        
+        return $filteredData;
     }
 }

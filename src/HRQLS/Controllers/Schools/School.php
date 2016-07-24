@@ -1,13 +1,15 @@
 <?php
 /**
- * Controller for Schools Endpoint.
+ * Controller for School Endpoint.
  *
- * @package HRQLS\Schools
+ * @package HRQLS/Controllers
  */
  
-namespace HRQLS\Controllers;
+namespace HRQLS\Controllers\Schools;
 
 use Silex\Application;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Class defining the Schools endpoint controller.
@@ -31,7 +33,7 @@ final class School
      */
     public function main(Request $req, Application $app)
     {
-        return [
+        return json_encode([
             'get' => [
                 '/hampton',
                 '/norfolk',
@@ -40,6 +42,6 @@ final class School
                 '/portsmouth',
                 '/chesapeake',
             ],
-        ];
+        ]);
     }
 }

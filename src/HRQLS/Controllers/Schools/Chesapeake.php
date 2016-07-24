@@ -2,19 +2,21 @@
 /**
  * Controller for Chesapeake School Endpoint.
  *
- * @package HRQLS\Schools
+ * @package HRQLS/Controllers
  */
  
-namespace HRQLS\Controllers;
+namespace HRQLS\Controllers\Schools;
 
 use Silex\Application;
-use HRQLS\Controllers\Schools\AbstractSchoolController;
+use Symfony\Component\HttpFoundation\Request;
 use HRQLS\Controllers\Models\HerculesResponse;
+use HRQLS\Controllers\Schools\SchoolUtils;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Class defining the Chesapeake School endpoint controller.
  */
-final class Chesapeake extends SchoolController
+final class Chesapeake
 {
     /**
      * The Main entry point for Chesapeake School endpoint.
@@ -26,16 +28,15 @@ final class Chesapeake extends SchoolController
      */
     public function main(Request $req, Application $app)
     {
-        $requestUrl = parent::formatRequestUrl('Chesapeake');
+        $requestUrl = SchoolUtils::formatRequestUrl('Chesapeake');
         $response = $app['guzzle']->get($requestUrl);
         
-        $schools = parent::convertToJson($response->getBody());
+        $schools = SchoolUtils::convertToJson($response->getBody());
         $schools = filterResultsByCity($schools, 'chesapeake');
         
-        foreach ($schools as $school) {
-            //TODO append each school to a HerculesResponse Object.
-        }
+        $herculesResponse = new \HerculesResponse('/schools/chesapeake', 200, $schools);
         
-        return [];
+        // The frontend expects a JSONP format, to do this the response must be wrapped in a callback.
+        return $_GET['callback'] . '(' . $herculesResponse->to_json() . ')';
     }
 }
