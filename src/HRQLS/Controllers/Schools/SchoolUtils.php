@@ -32,7 +32,7 @@ final class SchoolUtils
      */
     public static function formatRequestUrl($search)
     {
-        return 'http://api.greatschools.org/search/schools?key=' . self::getApiKey() . '&state=VA&q=' . $search;
+        return 'http://api.greatschools.org/search/schools?key=' . self::getApiKey() . '&state=VA&q=' . $search . '&sort=alpha';
     }
     
     /**
@@ -63,8 +63,8 @@ final class SchoolUtils
     public static function filterResultsByCity(array $data, $city)
     {
         $filteredData = [];
-        foreach ($data as $entry) {
-            if ($data['city'] === $city) {
+        foreach ($data['school'] as $entry) {
+            if (strtoupper($entry['city']) === strtoupper($city)) {
                 $filteredData[] = $entry;
             }
         }

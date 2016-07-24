@@ -32,7 +32,7 @@ final class Chesapeake
         $response = $app['guzzle']->get($requestUrl, []);
         
         $schools = SchoolUtils::convertToJson($response->getBody());
-        $schools = SchoolUtils::filterResultsByCity($schools, 'chesapeake');
+        $schools = SchoolUtils::filterResultsByCity($schools, 'Chesapeake');
         
         $herculesResponse = new HerculesResponse('/schools/chesapeake', 200, $schools);
         
