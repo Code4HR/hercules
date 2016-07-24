@@ -12,6 +12,8 @@ $bootstrap->connectDatabases();
 
 $bootstrap->loadLibarayProviders();
 
+$bootstrap->loadHttpClients();
+
 $bootstrap->registerRoutes();
 
 $bootstrap->startupSite();
