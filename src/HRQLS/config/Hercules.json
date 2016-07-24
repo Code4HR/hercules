@@ -26,30 +26,6 @@
       {
         "url": "/schools",
         "controller": "HRQLS\\Controllers\\Schools\\School::main"
-      },
-      {
-        "url": "/schools/hampton",
-        "controller": "HRQLS\\Controllers\\Schools\\Hampton::main"
-      },
-      {
-        "url": "/schools/vabeach",
-        "controller": "HRQLS\\Controllers\\Schools\\VABeach::main"
-      },
-      {
-        "url": "/schools/norfolk",
-        "controller": "HRQLS\\Controllers\\Schools\\Norfolk::main"
-      },
-      {
-        "url": "/schools/portsmouth",
-        "controller": "HRQLS\\Controllers\\Schools\\Portsmouth::main"
-      },
-      {
-        "url": "/schools/chesapeake",
-        "controller": "HRQLS\\Controllers\\Schools\\Chesapeake::main"
-      },
-      {
-        "url": "/schools/suffolk",
-        "controller": "HRQLS\\Controllers\\Schools\\Suffolk::main"
       }
     ]
   }
