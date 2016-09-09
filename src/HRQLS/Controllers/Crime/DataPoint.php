@@ -27,7 +27,12 @@ final class DataPoint
         'CITATION' => ['0'],
         'REPORT' => ['0'],
     ];
-    
+
+    /**
+     * @var string The unique id of the crime record
+     */
+    private $id;
+
     /**
      * @var string The offense that was reported.
      */
@@ -61,6 +66,7 @@ final class DataPoint
     /**
      * Creates a new Crime DataPoint from the given parameters.
      *
+     * @param string    $id       The unique id of the crime i.e. AGYUGGYGYG.
      * @param string    $offense  The crime that was reported i.e. Burglary.
      * @param \DateTime $date     The timestamp of when the crime was reported.
      * @param string    $city     The city in which the crime occured.
@@ -73,7 +79,7 @@ final class DataPoint
      * @throws \InvalidArgumentException When $category is not 'FELONY', 'MISDEMEANOR'.
      * @throws \InvalidArgumentException When $class is not valid for the specified category.
      */
-    public function __construct($offense, \DateTime $date, $city, array $location, $category = null, $class = null)
+    public function __construct($id, $offense, \DateTime $date, $city, array $location, $category = null, $class = null)
     {
         $classAndCategory = self::assignClassAndCategory($offense);
         
@@ -101,7 +107,7 @@ final class DataPoint
             );
         }
 
-        
+        $this->id = $id;
         $this->offense = $offense;
         $this->category = strtoupper($category);
         $this->class = $class;
@@ -115,6 +121,7 @@ final class DataPoint
      * Converts the crime datapoint to an associative array object
      *
      * @return array Like [
+     *   'id' => '',
      *   'offense' => '',
      *   'category' => '',
      *   'class' => '',
@@ -128,6 +135,7 @@ final class DataPoint
     public function toArray()
     {
         return [
+           'id' => $this->id,
            'offense' => $this->offense,
            'category' => $this->category,
            'class' => $this->class,
