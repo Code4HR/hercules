@@ -84,7 +84,7 @@ final class Hampton
     private function parseResults(array $results, HerculesResponse $response)
     {
         // Parse the results.
-        $resultArray = $results['hits']['hits'];
+        $resultArray = $results['hits'];
         foreach ($resultArray as $key => $value) {
             $offense = $value['_source']['offense'];
             $category = $value['_source']['category'];

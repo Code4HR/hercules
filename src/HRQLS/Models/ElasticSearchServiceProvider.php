@@ -84,24 +84,16 @@ class ElasticSearchServiceProvider implements ServiceProviderInterface
 
     /**
      * Search functionality exposed for use through the service provider.
+     * It uses scan search type and scroll API to retrieve large numbers of documents.
      *
      * @param array $indices The list of indices to include in the query. Defaults to searching all indices.
      * @param array $types   The list of types to include in the query. Defaults to searching all types.
      * @param array $query   The query to run against the specified indexes and types.
      *
      * @return array Like [
-     *    'took' => The amount of time the query took to execute,
-     *    'timed_out' => [
-     *      '_shards' => [
-     *        'total' => (Integer), Total number of shards queried,
-     *        'successful' => (integer), Number of successfully queried shards.
-     *        'failed' => (integer), Number of shards that could not be queried.
-     *    ],
+     *    'total' => (integer), Number of documents returned by the query,
      *    'hits' => [
-     *      'total' => (integer), Number of documents returned by the query.
-     *      'max_score' => (double), The highest score assigned during execution.
-     *      'hits' => [
-     *      ],
+     *      result set
      *    ],
      *  ];
      */
@@ -114,14 +106,26 @@ class ElasticSearchServiceProvider implements ServiceProviderInterface
         if ($types === null) {
             $types = [];
         }
-        
+
         $req = [
             'index' => implode(',', $indices),
             'type' => implode(',', $types),
             'body' => $query,
+            'scroll' => '1m',
         ];
         
-        return $this->client->search($req);
+        $response = $this->client->search($req);
+        $scrollId = $response['_scroll_id'];
+        $totalResults['total'] = $response['hits']['total'];
+        $totalResults['hits'] = [];
+        do {
+            $totalResults['hits'] = array_merge($totalResults['hits'], $response['hits']['hits']);
+            $response = $this->client->scroll(['scroll_id' => $scrollId, 'scroll' => '1m']);
+            $results = $response['hits']['hits'];
+            $scrollId = $response['_scroll_id'];
+        } while (count($results) > 0);
+
+        return $totalResults;
     }
     
     /**
