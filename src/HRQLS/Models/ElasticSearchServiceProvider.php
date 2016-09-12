@@ -108,10 +108,11 @@ class ElasticSearchServiceProvider implements ServiceProviderInterface
         }
 
         $req = [
+            'search_type' => 'scan',
+            'scroll' => '1m',
             'index' => implode(',', $indices),
             'type' => implode(',', $types),
             'body' => $query,
-            'scroll' => '1m',
         ];
         
         $response = $this->client->search($req);

@@ -127,6 +127,86 @@ class ElasticSearchProviderTest extends PHPUnit_Framework_TestCase
     }
     
     /**
+     * Verifies that search functionality has implemented scan and scroll.
+     *
+     * @return void
+     */
+    public function testPaginatedSearch()
+    {
+        //Get the mock objects.
+        list($esClientBuilderMock, $appMock, $esClientMock) = $this->getMockObjects();
+
+        $mockedEsResultsPage1 = [
+            '_scroll_id' => '347',
+            'total' => 11,
+            'max_score' => 1.0,
+            'hits' => [
+                'total' => 10,
+                'hits' => [
+                    ['_id' => 1, '_source' => [ 'field1' => 'val1'] ],
+                    ['_id' => 2, '_source' => [ 'field1' => 'val2'] ],
+                    ['_id' => 3, '_source' => [ 'field1' => 'val3'] ],
+                    ['_id' => 4, '_source' => [ 'field1' => 'val4'] ],
+                    ['_id' => 5, '_source' => [ 'field1' => 'val5'] ],
+                    ['_id' => 6, '_source' => [ 'field1' => 'val6'] ],
+                    ['_id' => 7, '_source' => [ 'field1' => 'val7'] ],
+                    ['_id' => 8, '_source' => [ 'field1' => 'val8'] ],
+                    ['_id' => 9, '_source' => [ 'field1' => 'val9'] ],
+                    ['_id' => 10, '_source' => [ 'field1' => 'val10'] ]
+                ]
+            ]
+        ];
+        
+        $mockedEsResultsPage2 = [
+            'hits' => [
+                'total' => 1,
+                'hits' => [
+                    ['_id' => 11, '_source' => [ 'field1' => 'val11'] ]
+                ]
+            ]
+        ] + $mockedEsResultsPage1;
+
+        $esClientMock->method('search')
+            ->willReturn([
+                '_scroll_id' => '347',
+                'hits' => [
+                    'total' => 11,
+                    'hits' => [],
+                ]
+            ]);
+
+        $esClientMock->method('scroll')
+            ->will($this->onConsecutiveCalls($mockedEsResultsPage1, $mockedEsResultsPage2));
+        
+        //Creates a new ElasticSearchServiceProvider from the ES Builder Mock.
+        $esServiceProvider = new ElasticSearchServiceProvider($esClientBuilderMock);
+        //Ensures the ES Client being used is our Mock Client.
+        $esServiceProvider->setClient($esClientMock);
+
+        //Query all documents under testIndex/testType.
+        $actual = $esServiceProvider->search(['testIndex'], ['testType'], []);
+
+        $expected = [
+            'total' => 11,
+            'hits' => [
+                ['_id' => 1, '_source' => [ 'field1' => 'val1'] ],
+                ['_id' => 2, '_source' => [ 'field1' => 'val2'] ],
+                ['_id' => 3, '_source' => [ 'field1' => 'val3'] ],
+                ['_id' => 4, '_source' => [ 'field1' => 'val4'] ],
+                ['_id' => 5, '_source' => [ 'field1' => 'val5'] ],
+                ['_id' => 6, '_source' => [ 'field1' => 'val6'] ],
+                ['_id' => 7, '_source' => [ 'field1' => 'val7'] ],
+                ['_id' => 8, '_source' => [ 'field1' => 'val8'] ],
+                ['_id' => 9, '_source' => [ 'field1' => 'val9'] ],
+                ['_id' => 10, '_source' => [ 'field1' => 'val10'] ],
+                ['_id' => 11, '_source' => [ 'field1' => 'val11'] ]
+            ]
+        ];
+
+        $this->assertEquals($expected, $actual);
+    }
+    
+    /**
      * Verifies that functionality to insert a document is exposed by the service provider.
      *
      * @return void
