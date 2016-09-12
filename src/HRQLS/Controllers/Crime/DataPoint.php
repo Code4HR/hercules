@@ -19,7 +19,7 @@ final class DataPoint
     const CATEGORIES = ['FELONY', 'MISDEMEANOR', 'CITATION', 'REPORT'];
     
     /**
-     *
+     * @var array Associative Array defining the valid range of classes for a crime category i.e. FELONY
      */
     const CLASSES = [
         'FELONY' => [ '1', '2', '3', '4', '5', '6' ],
@@ -145,6 +145,16 @@ final class DataPoint
         ];
     }
     
+    /**
+     * Gets the unique Id for this crime record.
+     *
+     * @return string The crime records unique Id.
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+     
     /**
      * Gets this crimes offense.
      *
