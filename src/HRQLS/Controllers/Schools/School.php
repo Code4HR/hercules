@@ -56,6 +56,21 @@ final class School
     }
     
     /**
+     * Retrieves a single school record with the specified id.
+     *
+     * @param Request     $req The request to be handled
+     * @param Application $app The Silex application used to handle the request.
+     * @param Integer     $id  The Id of the school record to return.
+     *
+     * @return array An array containing the details about the school with the specified id.
+     */
+    public function get(Request $req, Application $app, $id)
+    {
+        //@TODO Krishna will finish implementing this.
+        return json_encode([ 'endpoint' => '/schools/{id}', 'id' => $id ]);
+    }
+    
+    /**
      * Gets the ApiKey for the Great Schools API.
      *
      * @return string

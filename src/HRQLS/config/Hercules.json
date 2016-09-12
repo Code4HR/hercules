@@ -20,12 +20,20 @@
         "controller": "HRQLS\\Controllers\\Crime\\Hampton::main"
       },
       {
+        "url": "/crime/Hampton/{id}",
+        "controller": "HRQLS\\Controllers\\Crime\\Hampton::get"
+      },
+      {
         "url": "/food/sanitation",
         "controller": "HRQLS\\Controllers\\Food\\Sanitation::main"
       },
       {
         "url": "/schools",
         "controller": "HRQLS\\Controllers\\Schools\\School::main"
+      },
+      {
+        "url": "/schools/{id}",
+        "controller": "HRQLS\\Controllers\\Schools\\School::get"
       }
     ]
   }
