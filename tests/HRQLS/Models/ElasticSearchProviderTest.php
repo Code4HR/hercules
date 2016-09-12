@@ -49,7 +49,7 @@ class ElasticSearchProviderTest extends PHPUnit_Framework_TestCase
 
         $esClientMock = $this->getMockBuilder('ElasticSearch\Client')
             ->disableOriginalConstructor()
-            ->setMethods(['search', 'index', 'create', 'putMapping', 'indices'])
+            ->setMethods(['search', 'scroll', 'index', 'create', 'putMapping', 'indices'])
             ->getMock();
 
         $esClientBuilderMock->method('build')
@@ -99,14 +99,17 @@ class ElasticSearchProviderTest extends PHPUnit_Framework_TestCase
         //Get the mock objects.
         list($esClientBuilderMock, $appMock, $esClientMock) = $this->getMockObjects();
 
-        //Create a the expected results array for search.
-        $expected = static::getSearchReturnArray(self::MOCK_SEARCH_HITS);
+        //Set the mocked return array from Elastic Search
+        $mockedEsResults = static::getSearchReturnArray('347', self::MOCK_SEARCH_HITS);
         
         // Set the ESClientMock's return value for the search method to $expected.
         // I'm still fuzzy on the differences between will and willReturn so I used willReturn for readability.
         $esClientMock->method('search')
-            ->willReturn($expected);
+            ->willReturn($mockedEsResults);
 
+        $esClientMock->method('scroll')
+            ->willReturn($mockedEsResults);
+        
         //Creates a new ElasticSearchServiceProvider from the ES Builder Mock.
         $esServiceProvider = new ElasticSearchServiceProvider($esClientBuilderMock);
         //Ensures the ES Client being used is our Mock Client.
@@ -115,6 +118,11 @@ class ElasticSearchProviderTest extends PHPUnit_Framework_TestCase
         //Query all documents under testIndex/testType.
         $actual = $esServiceProvider->search(['testIndex'], ['testType'], []);
 
+        $expected = [
+            'total' => 0,
+            'hits' => []
+        ];
+        
         $this->assertEquals($expected, $actual);
     }
     
@@ -403,7 +411,8 @@ class ElasticSearchProviderTest extends PHPUnit_Framework_TestCase
     /**
      * Creates a mock ES search response array from the passed in data array.
      *
-     * @param array $data Array of data injected into search return array.
+     * @param string $scrollId The scroll id that should be returned.
+     * @param array  $data     Array of data injected into search return array.
      *
      * @return array Like [
      *    'took' => (Integer),
@@ -421,9 +430,10 @@ class ElasticSearchProviderTest extends PHPUnit_Framework_TestCase
      *    ],
      *  ];
      */
-    public function getSearchReturnArray(array $data)
+    public function getSearchReturnArray($scrollId, array $data)
     {
         return [
+         '_scroll_id' => $scrollId,
          'took' => 1337,
          'timed_out' => [
            '_shards' => [
