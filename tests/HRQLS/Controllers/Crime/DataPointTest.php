@@ -19,7 +19,18 @@ class DataPointTest extends PHPUnit_Framework_TestCase
      */
     public function testConstructor()
     {
-        $data = new DataPoint('an offense', new \DateTime(), 'Gotham', ['lat' => 0, 'lon' => 0], 'Felony', '1');
+        $data = new DataPoint(
+            'uniqueId',
+            'an offense',
+            new \DateTime(),
+            'Gotham',
+            [
+                'lat' => 0,
+                'lon' => 0
+            ],
+            'Felony',
+            '1'
+        );
         
         $this->assertInstanceOf('HRQLS\Controllers\Crime\DataPoint', $data);
         
@@ -35,7 +46,7 @@ class DataPointTest extends PHPUnit_Framework_TestCase
      */
     public function testConstructor_invalidCategory()
     {
-        new DataPoint('an offense', new \DateTime(), 'Gotham', ['lat' => 0, 'lon' => 0], 'invalid', '1');
+        new DataPoint('uniqueid', 'an offense', new \DateTime(), 'Gotham', ['lat' => 0, 'lon' => 0], 'invalid', '1');
     }
     
     /**
@@ -47,7 +58,7 @@ class DataPointTest extends PHPUnit_Framework_TestCase
      */
     public function testConstructor_invalidClass()
     {
-        new DataPoint('an offense', new \DateTime(), 'Gotham', ['lat' => 0, 'lon' => 0], 'FELONY', '1337');
+        new DataPoint('uniqueid', 'an offense', new \DateTime(), 'Gotham', ['lat' => 0, 'lon' => 0], 'FELONY', '1337');
     }
     
     /**
@@ -57,7 +68,7 @@ class DataPointTest extends PHPUnit_Framework_TestCase
      */
     public function testConstructor_noCategory()
     {
-        $actual = new DataPoint('ASSAULT', new \DateTime(), 'Gotham', ['lat' => 0, 'lon' => 0], '', '');
+        $actual = new DataPoint('uniqueid', 'ASSAULT', new \DateTime(), 'Gotham', ['lat' => 0, 'lon' => 0], '', '');
         
         $this->assertEquals('MISDEMEANOR', $actual->getCategory());
         $this->assertEquals('1', $actual->getClass());
@@ -66,46 +77,47 @@ class DataPointTest extends PHPUnit_Framework_TestCase
     /**
      * Verifies behaviour of DataPoint getters.
      *
-     * @depends testConstructor
-     *
-     * @param DataPoint $data The DataPoint object to use in test.
-     *
      * @return void
      */
-    public function testGets(DataPoint $data)
+    public function testGets()
     {
-        $expectedDate = new \DateTime();
-        $this->assertEquals('an offense', $data->getOffense());
-        $this->assertEquals('FELONY', $data->getCategory());
-        $this->assertEquals('1', $data->getClass());
-        $this->assertEquals($expectedDate->format('Y-m-d H:i:s'), $data->getOccured());
-        $this->assertEquals('Gotham', $data->getCity());
-        $this->assertEquals(['lat' => 0, 'lon' => 0], $data->getLocation());
+        $date = new \DateTime();
+        
+        $actual = new DataPoint('uniqueId', 'an offense', $date, 'Gotham', ['lat' => 0, 'lon' => 0], 'FELONY', '1');
+        
+        $this->assertEquals('uniqueId', $actual->getId());
+        $this->assertEquals('an offense', $actual->getOffense());
+        $this->assertEquals('FELONY', $actual->getCategory());
+        $this->assertEquals('1', $actual->getClass());
+        $this->assertEquals($date->format('Y-m-d H:i:s'), $actual->getOccured());
+        $this->assertEquals('Gotham', $actual->getCity());
+        $this->assertEquals(['lat' => 0, 'lon' => 0], $actual->getLocation());
     }
     
     /**
      * Verifies behavious of toArray function.
      *
-     * @depends testConstructor
-     *
-     * @param DataPoint $data The DataPoint object to use in test.
-     *
      * @return void
      */
-    public function testToArray(DataPoint $data)
+    public function testToArray()
     {
-        $expectedDateTime = new \DateTime();
+        $date = new \DateTime();
+        
+        $actual = new DataPoint('uniqueId', 'an offense', $date, 'Gotham', ['lat' => 0, 'lon' => 0], 'FELONY', '1');
         
         $expected = [
+            'id' => 'uniqueId',
             'offense' => 'an offense',
             'category' => 'FELONY',
             'class' => '1',
-            'occured' => $expectedDateTime->format('Y-m-d H:i:s'),
+            'occurred' => $date->format('Y-m-d H:i:s'),
             'city' => 'Gotham',
             'location' => [
                 'lat' => 0,
                 'lon' => 0,
             ],
         ];
+        
+        $this->assertEquals($expected, $actual->toArray());
     }
 }

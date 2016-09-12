@@ -84,8 +84,9 @@ final class Hampton
     private function parseResults(array $results, HerculesResponse $response)
     {
         // Parse the results.
-        $resultArray = $results['hits']['hits'];
+        $resultArray = $results['hits'];
         foreach ($resultArray as $key => $value) {
+            $id = $value['_id'];
             $offense = $value['_source']['offense'];
             $category = $value['_source']['category'];
             $class = $value['_source']['class'];
@@ -94,7 +95,7 @@ final class Hampton
             $location = $value['_source']['location'];
 
             if (isset($occured) && gettype($location) === 'array') {
-                $datapoint = new DataPoint($offense, $occured, $city, $location, $category, $class);
+                $datapoint = new DataPoint($id, $offense, $occured, $city, $location, $category, $class);
                 $response->addDataEntry($datapoint->toArray());
             }
         }
