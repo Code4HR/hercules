@@ -72,6 +72,20 @@ final class Hampton
         // The frontend expects a JSONP format, to do this the response must be wrapped in a callback.
         return $_GET['callback'] . '('.$response->to_json().')';
     }
+    
+    /**
+     * Retrieves a single crime record for the city of Hampton with the specified id.
+     *
+     * @param Request     $req The request to be handled.
+     * @param Application $app The Silex Application used to handle the request.
+     * @param Integer     $id  The id of the crime record to retrieve.
+     *
+     * @return array An array containing the details of a specific crime. 
+     */
+    public function get(Request $req, Application $app, $id)
+    {
+        return json_encode([ 'endpoint' => '/crime/Hampton/{id}', 'id' => $id ]);
+    }
 
     /**
      * Parse the results from Elasticsearch for the Hampton Crime data set.
