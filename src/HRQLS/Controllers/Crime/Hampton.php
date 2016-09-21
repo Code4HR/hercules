@@ -104,7 +104,7 @@ final class Hampton
             $offense = $value['_source']['offense'];
             $category = $value['_source']['category'];
             $class = $value['_source']['class'];
-            $occured = new \DateTime($value['_source']['occured']);
+            $occured = new \DateTime($value['_source']['occurred']);
             $city = $value['_source']['city'];
             $location = $value['_source']['location'];
 
