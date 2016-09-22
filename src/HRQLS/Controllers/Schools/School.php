@@ -63,22 +63,7 @@ final class School
         // The frontend expects a JSONP format, to do this the response must be wrapped in a callback.
         return $_GET['callback'] . '(' . $herculesResponse->to_json() . ')';
     }
-    
-    /**
-     * Retrieves a single school record with the specified id.
-     *
-     * @param Request     $req The request to be handled.
-     * @param Application $app The Silex application used to handle the request.
-     * @param integer     $id  The Id of the school record to return.
-     *
-     * @return array An array containing the details about the school with the specified id.
-     */
-    public function get(Request $req, Application $app, $id)
-    {
-        //@TODO Krishna will finish implementing this.
-        return json_encode([ 'endpoint' => '/schools/{id}', 'id' => $id ]);
-    }
-    
+
     /**
      * Gets the ApiKey for the Great Schools API.
      *
