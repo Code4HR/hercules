@@ -9,6 +9,7 @@ namespace HRQLS\Controllers\Schools;
 
 use Silex\Application;
 use HRQLS\Models\HerculesResponse;
+use HRQLS\Exceptions\InvalidFieldException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -39,14 +40,22 @@ final class School
         if ($req->query->has('cities')) {
             $requestedCities = explode(',', $req->query->get('cities'));
         }
-        
+
+        $groupByField = $req->query->get('groupBy');
+        $averageField = $req->query->get('averageField');
+
         $resultSet = [];
         foreach ($requestedCities as $requestedCity) {
             $url = self::formatRequestUrl($requestedCity);
             $response = $app['guzzle']->get($url, []);
             
             $schools = self::convertToJson($response->getBody());
+                
             $resultSet[] = self::filterResultsByCity($schools, $requestedCity);
+        }
+        
+        if (!empty($averageField) && !empty($groupByField)) {
+            $resultSet = self::calculateAverages($resultSet, $averageField, $groupByField);
         }
         
         $herculesResponse = new HerculesResponse('/schools', 200, $resultSet);
@@ -75,7 +84,7 @@ final class School
      *
      * @return string
      */
-    public function getApiKey()
+    private function getApiKey()
     {
         return getenv('GREATSCHOOLS_API_KEY');
     }
@@ -87,7 +96,7 @@ final class School
      *
      * @return string
      */
-    public function formatRequestUrl($search)
+    private function formatRequestUrl($search)
     {
         return 'http://api.greatschools.org/search/schools?key=' . self::getApiKey() . '&state=VA&q=' . $search;
     }
@@ -127,5 +136,87 @@ final class School
         }
         
         return $filteredData;
+    }
+
+    /**
+     * Calculates the averages for the resultSet as specified by the field and groupBy parameters.
+     *
+     * @param array  $results The result set to calculate averages for.
+     * @param string $field   The field to calculate an average of.
+     * @param string $groupBy The field to group averages together on.
+     *
+     * @return array
+     */
+    private function calculateAverages(array $results, $field = 'rating', $groupBy = 'city')
+    {
+        $totalResults = [];
+        foreach ($results as $citySchools) {
+            $totalResults[] = self::getCityAverage($citySchools, $field, $groupBy);
+        }
+        
+        return $totalResults;
+    }
+
+    /**
+     * Calculates the average for a single city as specified by the field and groupBy parameters.
+     *
+     * @param array  $schools The data to use in average calculation.
+     * @param string $field   The field to calculte an average for.
+     * @param string $groupBy The field to group average by.
+     *
+     * @return array
+     *
+     * @throws InvalidFieldException When $field or $groupBy does not exist as a key foreach record in $schools.
+     */
+    private function getCityAverage(array $schools, $field, $groupBy)
+    {
+        if (!in_array($field, [ 'parentRating', 'gsRating'])) {
+            throw new InvalidFieldException("{$field} is not a valid field name.");
+        }
+            
+        if (!in_array($groupBy, [ 'city', 'enrollment' ])) {
+            throw new InvalidFieldException("{$groupBy} is not a valid field name.");
+        }
+        
+        $totalResults = [];
+        foreach ($schools as $school) {
+            if (!array_key_exists($field, $school) || !array_key_exists($groupBy, $school)) {
+                continue;
+            }
+            
+            $key = $school[$groupBy];
+            self::addToTotals($totalResults, $key, $school[$field]);
+        }
+    
+        $finalResults = [];
+        foreach ($totalResults as $key => $result) {
+            $finalResults[$key] = $result['fieldCount'] / $result['numRecords'];
+        }
+    
+        return $finalResults;
+    }
+    
+    /**
+     * adds the current records count to the total count.
+     *
+     * @param array   $totals The current array of totals calculated.
+     * @param string  $key    The groupBy field being used as the key for an associative array.
+     * @param integer $value  The value add to the current addToTotals.
+     *
+     * @return void
+     */
+    private function addToTotals(array &$totals, $key, $value)
+    {
+        if (!array_key_exists($key, $totals)) {
+            $totals[$key] = [
+                'numRecords' => 1,
+                'fieldCount' => $value,
+            ];
+        
+            return;
+        }
+
+        $totals[$key]['fieldCount'] += $value;
+        $totals[$key]['numRecords'] += 1;
     }
 }
