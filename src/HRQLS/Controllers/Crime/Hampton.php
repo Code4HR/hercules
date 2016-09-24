@@ -78,9 +78,9 @@ final class Hampton
      *
      * @param Request     $req The request to be handled.
      * @param Application $app The Silex Application used to handle the request.
-     * @param Integer     $id  The id of the crime record to retrieve.
+     * @param integer     $id  The id of the crime record to retrieve.
      *
-     * @return array An array containing the details of a specific crime. 
+     * @return array An array containing the details of a specific crime.
      */
     public function get(Request $req, Application $app, $id)
     {

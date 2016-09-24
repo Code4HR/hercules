@@ -67,9 +67,9 @@ final class School
     /**
      * Retrieves a single school record with the specified id.
      *
-     * @param Request     $req The request to be handled
+     * @param Request     $req The request to be handled.
      * @param Application $app The Silex application used to handle the request.
-     * @param Integer     $id  The Id of the school record to return.
+     * @param integer     $id  The Id of the school record to return.
      *
      * @return array An array containing the details about the school with the specified id.
      */
@@ -130,6 +130,14 @@ final class School
     {
         $filteredData = [];
         foreach ($data['school'] as $entry) {
+            if (!array_key_exists('gsRating', $entry) || empty($entry['gsRating'])) {
+                continue;
+            }
+            
+            if (!array_key_exists('parentRating', $entry) || empty($entry['parentRating'])) {
+                continue;
+            }
+            
             if (strtoupper($entry['city']) === strtoupper($city)) {
                 $filteredData[] = $entry;
             }
