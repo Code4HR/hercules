@@ -130,6 +130,14 @@ final class School
     {
         $filteredData = [];
         foreach ($data['school'] as $entry) {
+            if (!array_key_exists('gsRating', $entry) || empty($entry['gsRating'])) {
+                continue;
+            }
+            
+            if (!array_key_exists('parentRating', $entry) || empty($entry['parentRating'])) {
+                continue;
+            }
+            
             if (strtoupper($entry['city']) === strtoupper($city)) {
                 $filteredData[] = $entry;
             }
