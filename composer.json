@@ -2,9 +2,46 @@
     "name": "hackathon/hrqls",
     "description": "HRQLS project for Fall 2015 Hackathon",
     "keywords": ["tol", "hackathon"],
+    "authors": [
+        {
+            "name": "Jason Bennett",
+            "email": "jason.bennett@dominionenterprises.com",
+            "role": "Developer"
+        },
+        {
+            "name": "Tom Bielek",
+            "email": "thomas.bielek@dominionenterprises.com",
+            "role": "Developer"
+        },
+        {
+            "name": "Krishna Ranga",
+            "email": "krishna.ranga@dominionenterprises.com",
+            "role": "Developer"
+        },
+        {
+            "name": "Alicia Sedarski",
+            "email": "alicia.sedarski@dominionenterprises.com",
+            "role": "Developer"
+        },
+        {
+            "name": "Josiah Baker",
+            "email": "josiah.baker@dominionenterprises.com",
+            "role": "Developer"
+        },
+        {
+            "name": "Derek Drummond",
+            "email": "derek.drummond@dominionenterprises.com",
+            "role": "Developer"
+        },
+        {
+            "name": "Krishna Ranga",
+            "email": "krishna.ranga@dominionenterprises.com",
+            "role": "Developer"
+        }
+    ],
     "license": "MIT",
     "require": {
-        "php": "^5.5 || ^7.0",
+        "php": "~5.5",
         "ext-json": "~1.2",
         "guzzlehttp/guzzle": "~6.1",
         "silex/silex": "~1.3",
@@ -14,7 +51,7 @@
         "phpdocumentor/phpdocumentor": "^2.8"
     },
     "require-dev": {
-        "phpunit/phpunit": "^5.5",
+        "phpunit/phpunit": "~4.7",
         "phploc/phploc": "~2.1",
         "squizlabs/php_codesniffer": "<=2.3"
     },
