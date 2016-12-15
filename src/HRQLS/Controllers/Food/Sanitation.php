@@ -22,13 +22,12 @@ final class Sanitation
      * @var array
      */
     public $cities = [
-        'norfolk' => 'http://api.openhealthinspection.com/vendors?after=24-10-2014&city=norfolk',
-        'portsmouth' => 'http://api.openhealthinspection.com/vendors?after=24-10-2014&city=portsmouth',
-        'virginiabeach' => 'http://api.openhealthinspection.com/vendors?after=24-10-2014&city=virginia%20beach',
-        'suffolk' => 'http://api.openhealthinspection.com/vendors?after=24-10-2014&city=suffolk',
-        'newportnews' => 'http://api.openhealthinspection.com/vendors?after=24-10-2014&city=newport%20news',
-        'hampton' => 'http://api.openhealthinspection.com/vendors?after=24-10-2014&city=hampton',
-        'chesapeake' => 'http://api.openhealthinspection.com/vendors?after=24-10-2014&city=chesapeake'
+        'norfolk' => 'https://ohi-api.code4hr.org/vendors?after=24-10-2014&city=norfolk',
+        'portsmouth' => 'https://ohi-api.code4hr.org/vendors?after=24-10-2014&city=portsmouth',
+        'virginiabeach' => 'https://ohi-api.code4hr.org/vendors?after=24-10-2014&city=virginia%20beach',
+        'suffolk' => 'https://ohi-api.code4hr.org/vendors?after=24-10-2014&city=suffolk',
+        'hampton' => 'https://ohi-api.code4hr.org/vendors?after=24-10-2014&city=hampton',
+        'chesapeake' => 'https://ohi-api.code4hr.org/vendors?after=24-10-2014&city=chesapeake'
     ];
 
     /**
