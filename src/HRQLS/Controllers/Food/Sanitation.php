@@ -22,12 +22,12 @@ final class Sanitation
      * @var array
      */
     public $cities = [
-        'norfolk' => 'https://ohi-api.code4hr.org/vendors?after=24-10-2014&city=norfolk',
-        'portsmouth' => 'https://ohi-api.code4hr.org/vendors?after=24-10-2014&city=portsmouth',
-        'virginiabeach' => 'https://ohi-api.code4hr.org/vendors?after=24-10-2014&city=virginia%20beach',
-        'suffolk' => 'https://ohi-api.code4hr.org/vendors?after=24-10-2014&city=suffolk',
-        'hampton' => 'https://ohi-api.code4hr.org/vendors?after=24-10-2014&city=hampton',
-        'chesapeake' => 'https://ohi-api.code4hr.org/vendors?after=24-10-2014&city=chesapeake'
+        'norfolk' => 'https://ohi-api.code4hr.org/vendors?city=norfolk',
+        'portsmouth' => 'https://ohi-api.code4hr.org/vendors?city=portsmouth',
+        'virginiabeach' => 'https://ohi-api.code4hr.org/vendors?city=virginia%20beach',
+        'suffolk' => 'https://ohi-api.code4hr.org/vendors?city=suffolk',
+        'hampton' => 'https://ohi-api.code4hr.org/vendors?city=hampton',
+        'chesapeake' => 'https://ohi-api.code4hr.org/vendors?city=chesapeake'
     ];
 
     /**
@@ -54,6 +54,10 @@ final class Sanitation
                 $data['longitude'] = $toldata['coordinates']['longitude'];
                 $data['city'] = $toldata['city'];
                 $data['score'] = $toldata['score'];
+                $data['address'] = $toldata['address'];
+                $data['type'] = $toldata['type'];
+                $data['category'] = $toldata['category'];
+                $data['url'] = $toldata['url'];
                 $apidata[] = $data['city'];
                     $sanitationdata[] = $data;
             }
