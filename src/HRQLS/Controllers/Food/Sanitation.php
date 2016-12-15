@@ -22,12 +22,12 @@ final class Sanitation
      * @var array
      */
     public $cities = [
-        'norfolk' => 'https://ohi-api.code4hr.org/vendors?after=01-01-2016&city=norfolk',
-        'portsmouth' => 'https://ohi-api.code4hr.org/vendors?after=01-01-2016&city=portsmouth',
-        'virginiabeach' => 'https://ohi-api.code4hr.org/vendors?after=01-01-2016&city=virginia%20beach',
-        'suffolk' => 'https://ohi-api.code4hr.org/vendors?after=01-01-2016&city=suffolk',
-        'hampton' => 'https://ohi-api.code4hr.org/vendors?after=01-01-2016&city=hampton',
-        'chesapeake' => 'https://ohi-api.code4hr.org/vendors?after=01-01-2016&city=chesapeake'
+        'norfolk' => 'https://ohi-api.code4hr.org/vendors?city=norfolk',
+        'portsmouth' => 'https://ohi-api.code4hr.org/vendors?city=portsmouth',
+        'virginiabeach' => 'https://ohi-api.code4hr.org/vendors?city=virginia%20beach',
+        'suffolk' => 'https://ohi-api.code4hr.org/vendors?city=suffolk',
+        'hampton' => 'https://ohi-api.code4hr.org/vendors?city=hampton',
+        'chesapeake' => 'https://ohi-api.code4hr.org/vendors?city=chesapeake'
     ];
 
     /**
