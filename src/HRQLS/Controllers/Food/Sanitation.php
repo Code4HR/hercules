@@ -57,6 +57,7 @@ final class Sanitation
                 $data['address'] = $toldata['address'];
                 $data['type'] = $toldata['type'];
                 $data['category'] = $toldata['category'];
+                $data['url'] = $toldata['url'];
                 $apidata[] = $data['city'];
                     $sanitationdata[] = $data;
             }
