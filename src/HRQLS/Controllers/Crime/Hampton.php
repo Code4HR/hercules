@@ -9,9 +9,9 @@ namespace HRQLS\Controllers\Crime;
 
 use HRQLS\Bootstrap;
 use Silex\Application;
-use HRQLS\Models\GuzzleServiceProvider;
+use Hercules\Response as HerculesResponse;
 use HRQLS\Controllers\Crime\DataPoint;
-use HRQLS\Models\HerculesResponse;
+use HRQLS\Models\GuzzleServiceProvider;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use HRQLS\Models\ElasticSearchServiceProvider;
@@ -64,7 +64,7 @@ final class Hampton
      */
     public function main(Request $req, Application $app)
     {
-        $response = new HerculesResponse('/crime/Hampton');
+        $response = new HerculesResponse('/crime/Hampton', new \DateTime());
         $esResult = $app['elasticsearch']->search($this->indices, [], []);
 
         $response = $this->parseResults($esResult, $response);
