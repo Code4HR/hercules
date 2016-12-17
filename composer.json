@@ -39,19 +39,26 @@
             "role": "Developer"
         }
     ],
+    "repositories": [
+        {
+            "type": "git",
+            "url": "https://github.com/ezzy1337/HerculesResponse.git"
+        }
+    ],
     "license": "MIT",
     "require": {
-        "php": "~5.5",
+        "php": "~5.6 || ~7.0",
         "ext-json": "~1.2",
         "guzzlehttp/guzzle": "~6.1",
         "silex/silex": "~1.3",
         "elasticsearch/elasticsearch": "^2.1",
         "monolog/monolog": "^1.17",
         "twig/twig": "^1.22",
-        "phpdocumentor/phpdocumentor": "^2.8"
+        "phpdocumentor/phpdocumentor": "^2.8",
+        "HerculesResponse": "^0.1"
     },
     "require-dev": {
-        "phpunit/phpunit": "~4.7",
+        "phpunit/phpunit": "~5.0",
         "phploc/phploc": "~2.1",
         "squizlabs/php_codesniffer": "<=2.3"
     },
