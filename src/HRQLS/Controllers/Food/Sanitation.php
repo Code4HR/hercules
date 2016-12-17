@@ -10,6 +10,7 @@ namespace HRQLS\Controllers\Food;
 use Silex\Application;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Hercules\Response as HerculesResponse;
 
 /**
  * Sanitization endpoint for the API.
@@ -63,6 +64,8 @@ final class Sanitation
             }
         }
 
-        return new Response($_GET['callback'] . '('.json_encode($sanitationdata).')', 201);
+        $herculeanResponse = new HerculesResponse('/Food/Sanitation', new \DateTime(), 200, $sanitationdata, []);
+
+        return $_GET['callback'] . '(' . $herculeanResponse->to_json() . ')';
     }
 }
