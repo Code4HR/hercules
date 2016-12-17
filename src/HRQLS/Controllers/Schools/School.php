@@ -8,7 +8,7 @@
 namespace HRQLS\Controllers\Schools;
 
 use Silex\Application;
-use HRQLS\Models\HerculesResponse;
+use Hercules\Response as HerculesResponse;
 use HRQLS\Exceptions\InvalidFieldException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -58,7 +58,7 @@ final class School
             $resultSet = self::calculateAverages($resultSet, $averageField, $groupByField);
         }
         
-        $herculesResponse = new HerculesResponse('/schools', 200, $resultSet);
+        $herculesResponse = new HerculesResponse('/schools', new \DateTime(), 200, $resultSet);
         
         // The frontend expects a JSONP format, to do this the response must be wrapped in a callback.
         return $_GET['callback'] . '(' . $herculesResponse->to_json() . ')';
