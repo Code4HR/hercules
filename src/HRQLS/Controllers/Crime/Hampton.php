@@ -84,7 +84,8 @@ final class Hampton
      */
     public function get(Request $req, Application $app, $id)
     {
-        return json_encode([ 'endpoint' => '/crime/Hampton/{id}', 'id' => $id ]);
+        $esResult = $app['elasticsearch']->get($this->indices, $this->types, $id);
+        return json_encode([ 'endpoint' => "/crime/Hampton/{$id}", $esResult ]);
     }
 
     /**

@@ -81,7 +81,31 @@ class ElasticSearchServiceProvider implements ServiceProviderInterface
     public function boot(Application $app)
     {
     }
+    /**
+     * Get functionality exposed for use through the service provider.
+     * It uses API to retrieve single document through get.
+     *
+     * @param array $indices The list of indices to include in the query. Defaults to searching all indices.
+     * @param array $types   The list of types to include in the query. Defaults to searching all types.
+     * @param array $id   The id to run against the specified indexes and types.
+     *
+     * @return array Like [
+     *      result set
+     * ]
+     */
+    public function get(array $indices, array $types, $id)
+    {
+        if (empty($indices)) {
+            $indices = ['_all'];
+        }
 
+        if ($types === null) {
+            $types = [];
+        }
+
+        $req = ['index' => implode(',', $indices), 'type' => implode(',', $types), 'id' => $id];
+        return $this->client->get($req)['_source'];
+    }
     /**
      * Search functionality exposed for use through the service provider.
      * It uses scan search type and scroll API to retrieve large numbers of documents.
